@@ -30,15 +30,20 @@ public class BoardTextView {
 
     public String displayMyOwnBoard() {
         StringBuilder body = new StringBuilder("");
-        for (int i = 0; i < toDisplay.getHeight(); ++i) {
-            body.append((char) ('A' + i) + " ");
+        for (int row = 0; row < toDisplay.getHeight(); ++row) {
+            body.append((char) ('A' + row) + " ");
             String sep = ""; // start with nothing to separate, then switch to | to separate
-            for (int j = 0; j < toDisplay.getWidth(); ++j) {
+            for (int col = 0; col < toDisplay.getWidth(); ++col) {
                 body.append(sep);
-                body.append(" ");
+                Character c = toDisplay.whatIsAt(new Coordinate(row, col));
+                if (c != null) {
+                    body.append(c);
+                } else {
+                    body.append(' ');
+                }
                 sep = "|";
             }
-            body.append(" " + (char) ('A' + i));
+            body.append(" " + (char) ('A' + row));
             body.append("\n");
         }
         return makeHeader() + body.toString() + makeHeader();

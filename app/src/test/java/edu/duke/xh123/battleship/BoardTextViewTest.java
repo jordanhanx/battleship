@@ -47,4 +47,22 @@ public class BoardTextViewTest {
                 "E  | |  E\n";
         emptyBoardHelper(3, 5, expectedHeader, expectedBody);
     }
+
+    @Test
+    public void test_display_notEmpty_3by4() {
+        Board<Character> b1 = new BattleShipBoard<Character>(3, 4);
+        b1.tryAddShip(new BasicShip(new Coordinate(0, 0)));
+        b1.tryAddShip(new BasicShip(new Coordinate(3, 0)));
+        b1.tryAddShip(new BasicShip(new Coordinate(0, 2)));
+        b1.tryAddShip(new BasicShip(new Coordinate(3, 2)));
+        BoardTextView view = new BoardTextView(b1);
+        String expectedHeader = "  0|1|2\n";
+        String expectedBody = "A s| |s A\n" +
+                "B  | |  B\n" +
+                "C  | |  C\n" +
+                "D s| |s D\n";
+        assertEquals(expectedHeader, view.makeHeader());
+        String expected = expectedHeader + expectedBody + expectedHeader;
+        assertEquals(expected, view.displayMyOwnBoard());
+    }
 }
