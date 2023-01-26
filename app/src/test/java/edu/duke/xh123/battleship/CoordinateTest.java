@@ -32,6 +32,7 @@ public class CoordinateTest {
         assertNotEquals(c1, c4);
         assertNotEquals(c3, c4);
         assertNotEquals(c1, "(1, 2)"); // different types
+        assertNotEquals(c1, null);
     }
 
     @Test

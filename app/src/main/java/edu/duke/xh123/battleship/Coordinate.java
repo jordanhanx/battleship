@@ -61,7 +61,7 @@ public class Coordinate {
 
     @Override
     public boolean equals(Object o) {
-        if (o.getClass().equals(getClass())) {
+        if (o != null && o.getClass().equals(getClass())) {
             Coordinate c = (Coordinate) o;
             return row == c.row && column == c.column;
         } else {

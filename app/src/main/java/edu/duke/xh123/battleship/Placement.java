@@ -48,7 +48,7 @@ public class Placement {
 
     @Override
     public boolean equals(Object o) {
-        if (o.getClass().equals(getClass())) {
+        if (o != null && o.getClass().equals(getClass())) {
             Placement p = (Placement) o;
             return cood.equals(p.cood) && orient == p.orient;
         } else {

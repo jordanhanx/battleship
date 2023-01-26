@@ -72,6 +72,7 @@ public class PlacementTest {
         assertNotEquals(p3, p4);
         assertNotEquals(p1, "D2H");
         assertNotEquals(p1, "coordination: (3, 2), orientation: H");
+        assertNotEquals(p1, null);
     }
 
     @Test
