@@ -1,5 +1,9 @@
 package edu.duke.xh123.battleship;
 
+/**
+ * This is the type of coordinate representing the location of ships in our
+ * Battleship game.
+ */
 public class Coordinate {
     private final int row;
     private final int column;
@@ -43,8 +47,7 @@ public class Coordinate {
         if (descr.length() != 2) {
             throw new IllegalArgumentException("Coordinate's description must be like 'A9' but is " + descr);
         }
-        descr.toUpperCase();
-        char rowLetter = descr.charAt(0);
+        char rowLetter = descr.toUpperCase().charAt(0);
         char columnNum = descr.charAt(1);
         if (rowLetter < 'A' || rowLetter > 'Z') {
             throw new IllegalArgumentException("Coordinate's row must between 'A' and 'Z' but is " + descr);

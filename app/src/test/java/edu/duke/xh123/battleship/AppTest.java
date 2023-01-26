@@ -4,11 +4,100 @@
 package edu.duke.xh123.battleship;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.Resources;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.StringReader;
+
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+    @Test
+    public void test_read_placement() throws IOException {
+        StringReader sr = new StringReader("B2V\nC8H\na4v\n");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(bytes, true);
+        Board<Character> b = new BattleShipBoard<>(10, 20);
+        App app = new App(b, sr, ps);
+
+        String prompt = "Please enter a location for a ship:";
+        Placement[] expected = new Placement[3];
+        expected[0] = new Placement(new Coordinate(1, 2), 'V');
+        expected[1] = new Placement(new Coordinate(2, 8), 'H');
+        expected[2] = new Placement(new Coordinate(0, 4), 'V');
+
+        for (int i = 0; i < expected.length; i++) {
+            Placement p = app.readPlacement(prompt);
+            assertEquals(p, expected[i]); // did we get the right Placement back
+            assertEquals(prompt + "\n", bytes.toString()); // should have printed prompt and newline
+            bytes.reset(); // clear out bytes for next time around
+        }
+    }
+
+    @Test
+    public void test_doOnePlacement() throws IOException {
+        StringReader sr = new StringReader("B2V\nd4h\na5v\n");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(bytes, true);
+        Board<Character> b = new BattleShipBoard<>(5, 5);
+        App app = new App(b, sr, ps);
+
+        String prompt = "Where would you like to put your ship?\n";
+        String expectedHeader = "  0|1|2|3|4\n";
+        String[] expectedBodys = new String[3];
+        expectedBodys[0] = "A  | | | |  A\n" +
+                "B  | |s| |  B\n" +
+                "C  | | | |  C\n" +
+                "D  | | | |  D\n" +
+                "E  | | | |  E\n";
+        expectedBodys[1] = "A  | | | |  A\n" +
+                "B  | |s| |  B\n" +
+                "C  | | | |  C\n" +
+                "D  | | | |s D\n" +
+                "E  | | | |  E\n";
+        expectedBodys[2] = "A  | | | |  A\n" +
+                "B  | |s| |  B\n" +
+                "C  | | | |  C\n" +
+                "D  | | | |s D\n" +
+                "E  | | | |  E\n";
+        for (int i = 0; i < expectedBodys.length; ++i) {
+            app.doOnePlacement();
+            assertEquals(prompt + expectedHeader + expectedBodys[i] + expectedHeader, bytes.toString());
+            bytes.reset();
+        }
+    }
+
+    @Test
+    @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE) // Ensure proper serialization of
+                                                                                      // the tests in parallel.
+    public void test_main() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(bytes, true);
+
+        InputStream input = getClass().getClassLoader().getResourceAsStream("input.txt");
+        assertNotNull(input);
+
+        InputStream expectedStream = getClass().getClassLoader().getResourceAsStream("output.txt");
+        assertNotNull(expectedStream);
+
+        InputStream oldIn = System.in;
+        PrintStream oldOut = System.out;
+        try {
+            System.setIn(input);
+            System.setOut(out);
+            App.main(new String[0]);
+        } finally {
+            System.setIn(oldIn);
+            System.setOut(oldOut);
+        }
+
+        String expected = new String(expectedStream.readAllBytes());
+        String actual = bytes.toString();
+        assertEquals(expected, actual);
     }
 }

@@ -1,5 +1,8 @@
 package edu.duke.xh123.battleship;
 
+/**
+ * This is the type of placement of ships in our Battleship game.
+ */
 public class Placement {
     private final Coordinate cood;
     private final char orient;

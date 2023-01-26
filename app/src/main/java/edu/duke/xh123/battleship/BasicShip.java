@@ -1,8 +1,17 @@
 package edu.duke.xh123.battleship;
 
+/**
+ * This is an specific type of Ship occupying only 1 grid in our Battleship
+ * game.
+ */
 public class BasicShip implements Ship<Character> {
     private final Coordinate myLocation;
 
+    /**
+     * Constructs a BasicShip with the specified coordinate
+     * 
+     * @param c is the coordinate of the ship.
+     */
     public BasicShip(Coordinate c) {
         this.myLocation = c;
     }

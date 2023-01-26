@@ -59,13 +59,13 @@ public class CoordinateTest {
 
     @Test
     void test_string_constructor_valid_cases() {
-        Coordinate c1 = new Coordinate("B3");
+        Coordinate c1 = new Coordinate("b3");
         assertEquals(1, c1.getRow());
         assertEquals(3, c1.getColumn());
         Coordinate c2 = new Coordinate("D5");
         assertEquals(3, c2.getRow());
         assertEquals(5, c2.getColumn());
-        Coordinate c3 = new Coordinate("A9");
+        Coordinate c3 = new Coordinate("a9");
         assertEquals(0, c3.getRow());
         assertEquals(9, c3.getColumn());
         Coordinate c4 = new Coordinate("Z0");

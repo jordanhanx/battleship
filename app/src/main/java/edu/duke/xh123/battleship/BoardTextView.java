@@ -28,6 +28,11 @@ public class BoardTextView {
         }
     }
 
+    /**
+     * This makes what the board will display.
+     * 
+     * @return the String that represent the body part of the board's display.
+     */
     public String displayMyOwnBoard() {
         StringBuilder body = new StringBuilder("");
         for (int row = 0; row < toDisplay.getHeight(); ++row) {
