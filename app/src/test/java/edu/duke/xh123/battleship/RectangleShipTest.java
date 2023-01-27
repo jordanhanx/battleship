@@ -22,7 +22,7 @@ public class RectangleShipTest {
 
     @Test
     void test_constructor() {
-        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 2), 2, 3, 's', '*');
+        RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 2, 3, 's', '*');
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(1, 2)));
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(2, 2)));
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(3, 2)));
@@ -35,7 +35,7 @@ public class RectangleShipTest {
 
     @Test
     void test_recordHitAt_and_wasHitAt() {
-        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 2), 2, 3, 's', '*');
+        RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 2, 3, 's', '*');
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(2, 2)));
         assertThrows(IllegalArgumentException.class, () -> ship.recordHitAt(new Coordinate(3, 4)));
@@ -51,7 +51,7 @@ public class RectangleShipTest {
 
     @Test
     void test_isSunk() {
-        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 2), 1, 3, 's', '*');
+        RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 1, 3, 's', '*');
         assertEquals(false, ship.isSunk());
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
         assertEquals(false, ship.isSunk());
@@ -63,10 +63,19 @@ public class RectangleShipTest {
 
     @Test
     void test_getDisplayInfoAt() {
-        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 2), 1, 3, 's', '*');
+        RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 1, 3, 's', '*');
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
         assertEquals('*', ship.getDisplayInfoAt(new Coordinate(1, 2)));
         assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 2)));
         assertEquals('s', ship.getDisplayInfoAt(new Coordinate(3, 2)));
+    }
+
+    @Test
+    void test_getName() {
+        RectangleShip<Character> sub = new RectangleShip<>("submarine", new Coordinate(1, 2), 1, 3, 's', '*');
+        assertEquals("submarine", sub.getName());
+        RectangleShip<Character> most_powerful = new RectangleShip<>("Yamato", new Coordinate(1, 2), 1, 3, 's', '*');
+        assertNotEquals("Missouri", most_powerful.getName());
+        assertEquals("Yamato", most_powerful.getName());
     }
 }

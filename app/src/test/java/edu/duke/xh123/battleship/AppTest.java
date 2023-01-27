@@ -41,7 +41,7 @@ class AppTest {
 
     @Test
     public void test_doOnePlacement() throws IOException {
-        StringReader sr = new StringReader("B2V\nd4h\na5v\n");
+        StringReader sr = new StringReader("B2V\nd1h\ne3h\n");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(bytes, true);
         Board<Character> b = new BattleShipBoard<>(5, 5);
@@ -51,20 +51,20 @@ class AppTest {
         String expectedHeader = "  0|1|2|3|4\n";
         String[] expectedBodys = new String[3];
         expectedBodys[0] = "A  | | | |  A\n" +
-                "B  | |s| |  B\n" +
-                "C  | | | |  C\n" +
-                "D  | | | |  D\n" +
+                "B  | |d| |  B\n" +
+                "C  | |d| |  C\n" +
+                "D  | |d| |  D\n" +
                 "E  | | | |  E\n";
         expectedBodys[1] = "A  | | | |  A\n" +
-                "B  | |s| |  B\n" +
-                "C  | | | |  C\n" +
-                "D  | | | |s D\n" +
+                "B  | |d| |  B\n" +
+                "C  | |d| |  C\n" +
+                "D  |d|d|d|  D\n" +
                 "E  | | | |  E\n";
         expectedBodys[2] = "A  | | | |  A\n" +
-                "B  | |s| |  B\n" +
-                "C  | | | |  C\n" +
-                "D  | | | |s D\n" +
-                "E  | | | |  E\n";
+                "B  | |d| |  B\n" +
+                "C  | |d| |  C\n" +
+                "D  |d|d|d|  D\n" +
+                "E  | | |d|d E\n";
         for (int i = 0; i < expectedBodys.length; ++i) {
             app.doOnePlacement();
             assertEquals(prompt + expectedHeader + expectedBodys[i] + expectedHeader, bytes.toString());
