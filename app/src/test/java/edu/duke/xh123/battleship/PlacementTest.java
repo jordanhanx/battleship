@@ -56,6 +56,8 @@ public class PlacementTest {
         assertThrows(IllegalArgumentException.class, () -> new Placement("D2 "));
         assertThrows(IllegalArgumentException.class, () -> new Placement("D2$"));
         assertThrows(IllegalArgumentException.class, () -> new Placement("D12H"));
+        assertThrows(IllegalArgumentException.class, () -> new Placement(""));
+        assertThrows(IllegalArgumentException.class, () -> new Placement("D2"));
     }
 
     @Test

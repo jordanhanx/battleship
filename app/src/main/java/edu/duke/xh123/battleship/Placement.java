@@ -32,10 +32,16 @@ public class Placement {
      * @throws IllegalArgumentException if the description is illegal.
      */
     public Placement(String descr) {
-        this(new Coordinate(descr.substring(0, 2)), descr.charAt(2));
+        // this(new Coordinate(descr.substring(0, 2)), descr.charAt(2));
         if (descr.length() != 3) {
             throw new IllegalArgumentException("Placement's description must be like 'A9H' but is " + descr);
         }
+        char upper_o = Character.toUpperCase(descr.charAt(2));
+        if (upper_o != 'H' && upper_o != 'V') {
+            throw new IllegalArgumentException("Orientation should be either 'H'/'h' or 'V'/'v' but is " + descr);
+        }
+        this.cood = new Coordinate(descr.substring(0, 2));
+        this.orient = upper_o;
     }
 
     public Coordinate getCoordinate() {
