@@ -23,6 +23,18 @@ public abstract class BasicShip<T> implements Ship<T> {
         }
     }
 
+    /**
+     * Checks if the Coordinate is in this ship.
+     * 
+     * @param c is the coordinate to be checked.
+     * @throws IllegalArgumentException if the Coordinate is not in this ship.
+     */
+    protected void checkCoordinateInThisShip(Coordinate c) {
+        if (!myPieces.containsKey(c)) {
+            throw new IllegalArgumentException("Coordinate" + c.toString() + " is not in this ship");
+        }
+    }
+
     @Override
     public boolean occupiesCoordinates(Coordinate where) {
         return myPieces.containsKey(where);
@@ -30,27 +42,25 @@ public abstract class BasicShip<T> implements Ship<T> {
 
     @Override
     public boolean isSunk() {
-        // TODO Auto-generated method stub
-        return false;
+        return !myPieces.containsValue(false);
     }
 
     @Override
     public void recordHitAt(Coordinate where) {
-        // TODO Auto-generated method stub
-
+        checkCoordinateInThisShip(where);
+        myPieces.put(where, true);
     }
 
     @Override
     public boolean wasHitAt(Coordinate where) {
-        // TODO Auto-generated method stub
-        return false;
+        checkCoordinateInThisShip(where);
+        return myPieces.get(where);
     }
 
     @Override
     public T getDisplayInfoAt(Coordinate where) {
-        // TODO this is not right. We need to
-        // look up the hit status of this coordinate
-        return myDisplayInfo.getInfo(where, false);
+        checkCoordinateInThisShip(where);
+        return myDisplayInfo.getInfo(where, wasHitAt(where));
     }
 
 }

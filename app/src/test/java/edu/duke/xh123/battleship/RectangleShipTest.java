@@ -22,7 +22,7 @@ public class RectangleShipTest {
 
     @Test
     void test_constructor() {
-        RectangleShip ship = new RectangleShip<Character>(new Coordinate(1, 2), 2, 3, 's', '*');
+        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 2), 2, 3, 's', '*');
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(1, 2)));
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(2, 2)));
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(3, 2)));
@@ -31,5 +31,42 @@ public class RectangleShipTest {
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(3, 3)));
         assertEquals(false, ship.occupiesCoordinates(new Coordinate(1, 1)));
         assertEquals(false, ship.occupiesCoordinates(new Coordinate(3, 4)));
+    }
+
+    @Test
+    void test_recordHitAt_and_wasHitAt() {
+        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 2), 2, 3, 's', '*');
+        assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
+        assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(2, 2)));
+        assertThrows(IllegalArgumentException.class, () -> ship.recordHitAt(new Coordinate(3, 4)));
+
+        assertEquals(true, ship.wasHitAt(new Coordinate(1, 2)));
+        assertEquals(true, ship.wasHitAt(new Coordinate(2, 2)));
+        assertEquals(false, ship.wasHitAt(new Coordinate(3, 2)));
+        assertEquals(false, ship.wasHitAt(new Coordinate(1, 3)));
+        assertEquals(false, ship.wasHitAt(new Coordinate(2, 3)));
+        assertEquals(false, ship.wasHitAt(new Coordinate(3, 3)));
+        assertThrows(IllegalArgumentException.class, () -> ship.wasHitAt(new Coordinate(3, 4)));
+    }
+
+    @Test
+    void test_isSunk() {
+        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 2), 1, 3, 's', '*');
+        assertEquals(false, ship.isSunk());
+        assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
+        assertEquals(false, ship.isSunk());
+        assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(2, 2)));
+        assertEquals(false, ship.isSunk());
+        assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(3, 2)));
+        assertEquals(true, ship.isSunk());
+    }
+
+    @Test
+    void test_getDisplayInfoAt() {
+        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 2), 1, 3, 's', '*');
+        assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(1, 2)));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 2)));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(3, 2)));
     }
 }
