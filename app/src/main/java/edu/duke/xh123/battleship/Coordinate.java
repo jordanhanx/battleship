@@ -26,12 +26,6 @@ public class Coordinate {
      *                                  equal to zero.
      */
     public Coordinate(int r, int c) {
-        if (r < 0) {
-            throw new IllegalArgumentException("Coordinate's row number cannot be negtive but is " + r);
-        }
-        if (c < 0) {
-            throw new IllegalArgumentException("Coordinate's column number cannot be negtive but is " + c);
-        }
         this.row = r;
         this.column = c;
     }

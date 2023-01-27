@@ -1,24 +1,31 @@
 package edu.duke.xh123.battleship;
 
+import java.util.HashMap;
+
 /**
- * This is an specific type of Ship occupying only 1 grid in our Battleship
- * game.
+ * This is an basic type of Ship occupying in our Battleship Game.
  */
-public class BasicShip implements Ship<Character> {
-    private final Coordinate myLocation;
+public abstract class BasicShip<T> implements Ship<T> {
+    protected HashMap<Coordinate, Boolean> myPieces;
+    protected ShipDisplayInfo<T> myDisplayInfo;
 
     /**
-     * Constructs a BasicShip with the specified coordinate
+     * Constructs a BasicShip with some Iterable Coordinates
      * 
-     * @param c is the coordinate of the ship.
+     * @param where         is some Iterable Coordinates occupied by the ship .
+     * @param myDisplayInfo is the ship's display information.
      */
-    public BasicShip(Coordinate c) {
-        this.myLocation = c;
+    public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo) {
+        this.myPieces = new HashMap<>();
+        this.myDisplayInfo = myDisplayInfo;
+        for (Coordinate c : where) {
+            this.myPieces.put(c, false);
+        }
     }
 
     @Override
     public boolean occupiesCoordinates(Coordinate where) {
-        return where.equals(myLocation);
+        return myPieces.containsKey(where);
     }
 
     @Override
@@ -40,8 +47,10 @@ public class BasicShip implements Ship<Character> {
     }
 
     @Override
-    public Character getDisplayInfoAt(Coordinate where) {
-        return 's';
+    public T getDisplayInfoAt(Coordinate where) {
+        // TODO this is not right. We need to
+        // look up the hit status of this coordinate
+        return myDisplayInfo.getInfo(where, false);
     }
 
 }

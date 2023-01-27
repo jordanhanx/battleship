@@ -1,12 +1,9 @@
 package edu.duke.xh123.battleship;
 
 /**
- * This class handles textual display of
- * a Board (i.e., converting it to a string to show
- * to the user).
- * It supports two ways to display the Board:
- * one for the player's own board, and one for the
- * enemy's board.
+ * This class handles textual display of a Board (i.e., converting it to a
+ * string to show to the user). It supports two ways to display the Board: one
+ * for the player's own board, and one for the enemy's board.
  */
 public class BoardTextView {
     /**

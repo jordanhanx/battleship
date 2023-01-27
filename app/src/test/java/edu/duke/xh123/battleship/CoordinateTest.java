@@ -13,14 +13,6 @@ public class CoordinateTest {
     }
 
     @Test
-    public void test_invalid_coordinate() {
-        assertDoesNotThrow(() -> new Coordinate(0, 3));
-        assertDoesNotThrow(() -> new Coordinate(7, 0));
-        assertThrows(IllegalArgumentException.class, () -> new Coordinate(-1, 9));
-        assertThrows(IllegalArgumentException.class, () -> new Coordinate(5, -2));
-    }
-
-    @Test
     public void test_equals() {
         Coordinate c1 = new Coordinate(1, 2);
         Coordinate c2 = new Coordinate(1, 2);

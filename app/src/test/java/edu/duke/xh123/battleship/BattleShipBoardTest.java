@@ -33,19 +33,19 @@ public class BattleShipBoardTest {
         BattleShipBoard<Character> b = new BattleShipBoard<Character>(10, 10);
         Character[][] expect = new Character[10][10];
         checkWhatIsAtBoard(b, expect);
-        if (b.tryAddShip(new BasicShip(new Coordinate(0, 0)))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(0, 0), 's', '*'))) {
             expect[0][0] = 's';
         }
-        if (b.tryAddShip(new BasicShip(new Coordinate(9, 0)))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(9, 0), 's', '*'))) {
             expect[0][9] = 's';
         }
-        if (b.tryAddShip(new BasicShip(new Coordinate(0, 9)))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(0, 9), 's', '*'))) {
             expect[9][0] = 's';
         }
-        if (b.tryAddShip(new BasicShip(new Coordinate(9, 9)))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(9, 9), 's', '*'))) {
             expect[9][9] = 's';
         }
-        if (b.tryAddShip(new BasicShip(new Coordinate(5, 5)))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(5, 5), 's', '*'))) {
             expect[5][5] = 's';
         }
         checkWhatIsAtBoard(b, expect);

@@ -32,7 +32,6 @@ public class Placement {
      * @throws IllegalArgumentException if the description is illegal.
      */
     public Placement(String descr) {
-        // this(new Coordinate(descr.substring(0, 2)), descr.charAt(2));
         if (descr.length() != 3) {
             throw new IllegalArgumentException("Placement's description must be like 'A9H' but is " + descr);
         }

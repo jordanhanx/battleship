@@ -51,10 +51,10 @@ public class BoardTextViewTest {
     @Test
     public void test_display_notEmpty_3by4() {
         Board<Character> b1 = new BattleShipBoard<Character>(3, 4);
-        b1.tryAddShip(new BasicShip(new Coordinate(0, 0)));
-        b1.tryAddShip(new BasicShip(new Coordinate(3, 0)));
-        b1.tryAddShip(new BasicShip(new Coordinate(0, 2)));
-        b1.tryAddShip(new BasicShip(new Coordinate(3, 2)));
+        b1.tryAddShip(new RectangleShip<Character>(new Coordinate(0, 0), 's', '*'));
+        b1.tryAddShip(new RectangleShip<Character>(new Coordinate(3, 0), 's', '*'));
+        b1.tryAddShip(new RectangleShip<Character>(new Coordinate(0, 2), 's', '*'));
+        b1.tryAddShip(new RectangleShip<Character>(new Coordinate(3, 2), 's', '*'));
         BoardTextView view = new BoardTextView(b1);
         String expectedHeader = "  0|1|2\n";
         String expectedBody = "A s| |s A\n" +
