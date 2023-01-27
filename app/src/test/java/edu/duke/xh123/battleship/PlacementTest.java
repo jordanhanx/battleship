@@ -73,7 +73,6 @@ public class PlacementTest {
         assertNotEquals(p1, p4);
         assertNotEquals(p3, p4);
         assertNotEquals(p1, "D2H");
-        assertNotEquals(p1, "coordination: (3, 2), orientation: H");
         assertNotEquals(p1, null);
     }
 
@@ -96,9 +95,9 @@ public class PlacementTest {
         Placement p2 = new Placement("D2H");
         Placement p3 = new Placement("D2v");
         Placement p4 = new Placement("Q8h");
-        assertEquals("coordination: (3, 2), orientation: H", p1.toString());
-        assertEquals("coordination: (3, 2), orientation: H", p2.toString());
-        assertEquals("coordination: (3, 2), orientation: V", p3.toString());
-        assertEquals("coordination: (16, 8), orientation: H", p4.toString());
+        assertEquals("D2H", p1.toString());
+        assertEquals("D2H", p2.toString());
+        assertEquals("D2V", p3.toString());
+        assertEquals("Q8H", p4.toString());
     }
 }

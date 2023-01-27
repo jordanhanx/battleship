@@ -69,6 +69,8 @@ public class Placement {
 
     @Override
     public String toString() {
-        return "coordination: " + cood + ", orientation: " + orient;
+        char r = (char) ('A' + cood.getRow());
+        char c = (char) ('0' + cood.getColumn());
+        return "" + r + c + orient;
     }
 }
