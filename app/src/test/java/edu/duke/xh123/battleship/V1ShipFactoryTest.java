@@ -14,7 +14,7 @@ public class V1ShipFactoryTest {
     }
 
     @Test
-    void test_MakeBattleship() {
+    public void test_MakeBattleship() {
         Placement v1_2 = new Placement(new Coordinate(1, 2), 'V');
         Ship<Character> s1 = new V1ShipFactory().makeBattleship(v1_2);
         checkShip(s1, "Battleship", 'b', new Coordinate(1, 2), new Coordinate(2, 2), new Coordinate(3, 2),
@@ -32,7 +32,7 @@ public class V1ShipFactoryTest {
     }
 
     @Test
-    void test_MakeCarrier() {
+    public void test_MakeCarrier() {
         Placement v1_2 = new Placement(new Coordinate(1, 2), 'V');
         Ship<Character> s1 = new V1ShipFactory().makeCarrier(v1_2);
         checkShip(s1, "Carrier", 'c', new Coordinate(1, 2), new Coordinate(2, 2), new Coordinate(3, 2),
@@ -50,7 +50,7 @@ public class V1ShipFactoryTest {
     }
 
     @Test
-    void test_MakeDestroyer() {
+    public void test_MakeDestroyer() {
         Placement v1_2 = new Placement(new Coordinate(1, 2), 'V');
         Ship<Character> s1 = new V1ShipFactory().makeDestroyer(v1_2);
         checkShip(s1, "Destroyer", 'd', new Coordinate(1, 2), new Coordinate(2, 2), new Coordinate(3, 2));
@@ -65,7 +65,7 @@ public class V1ShipFactoryTest {
     }
 
     @Test
-    void test_MakeSubmarine() {
+    public void test_MakeSubmarine() {
         Placement v1_2 = new Placement(new Coordinate(1, 2), 'V');
         Ship<Character> s1 = new V1ShipFactory().makeSubmarine(v1_2);
         checkShip(s1, "Submarine", 's', new Coordinate(1, 2), new Coordinate(2, 2));

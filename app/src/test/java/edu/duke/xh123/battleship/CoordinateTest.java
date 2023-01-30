@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class CoordinateTest {
     @Test
-    void test_row_and_column() {
+    public void test_row_and_column() {
         Coordinate cood = new Coordinate(5, 7);
         assertEquals(5, cood.getRow());
         assertEquals(7, cood.getColumn());

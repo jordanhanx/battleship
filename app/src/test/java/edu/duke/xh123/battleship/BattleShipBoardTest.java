@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class BattleShipBoardTest {
     @Test
-    void test_width_and_height() {
+    public void test_width_and_height() {
         Board<Character> b1 = new BattleShipBoard<Character>(10, 20);
         assertEquals(10, b1.getWidth());
         assertEquals(20, b1.getHeight());
@@ -49,5 +49,21 @@ public class BattleShipBoardTest {
             expect[5][5] = 's';
         }
         checkWhatIsAtBoard(b, expect);
+    }
+
+    @Test
+    public void test_tryAddShip() {
+        BattleShipBoard<Character> b = new BattleShipBoard<Character>(10, 10);
+        AbstractShipFactory<Character> shipFactory = new V1ShipFactory();
+        Ship<Character> c1 = shipFactory.makeCarrier(new Placement(new Coordinate(0, 0), 'h'));
+        assertEquals(true, b.tryAddShip(c1));
+
+        Ship<Character> s1 = shipFactory.makeSubmarine(new Placement(new Coordinate(-1, 0), 'v'));
+        Ship<Character> s2 = shipFactory.makeSubmarine(new Placement(new Coordinate(0, 0), 'v'));
+        Ship<Character> s3 = shipFactory.makeSubmarine(new Placement(new Coordinate(1, 0), 'v'));
+
+        assertEquals(false, b.tryAddShip(s1));
+        assertEquals(false, b.tryAddShip(s2));
+        assertEquals(true, b.tryAddShip(s3));
     }
 }

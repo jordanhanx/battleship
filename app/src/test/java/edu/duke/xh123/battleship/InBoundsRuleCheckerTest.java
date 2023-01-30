@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class InBoundsRuleCheckerTest {
     @Test
-    void test_InBoundsRule() {
+    public void test_InBoundsRule() {
         Board<Character> b_10by20 = new BattleShipBoard<Character>(10, 20);
         AbstractShipFactory<Character> shipFactory = new V1ShipFactory();
         Ship<Character> s1 = shipFactory.makeSubmarine(new Placement(new Coordinate(0, 0), 'v'));

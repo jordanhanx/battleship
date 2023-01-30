@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class RectangleShipTest {
     @Test
-    void test_MakeCoords() {
+    public void test_MakeCoords() {
         HashSet<Coordinate> s1 = RectangleShip.makeCoords(new Coordinate(1, 2), 2, 3);
         assertEquals(false, s1.isEmpty());
         s1.remove(new Coordinate(1, 2));
@@ -21,7 +21,7 @@ public class RectangleShipTest {
     }
 
     @Test
-    void test_constructor() {
+    public void test_constructor() {
         RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 2, 3, 's', '*');
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(1, 2)));
         assertEquals(true, ship.occupiesCoordinates(new Coordinate(2, 2)));
@@ -34,7 +34,7 @@ public class RectangleShipTest {
     }
 
     @Test
-    void test_recordHitAt_and_wasHitAt() {
+    public void test_recordHitAt_and_wasHitAt() {
         RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 2, 3, 's', '*');
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(2, 2)));
@@ -50,7 +50,7 @@ public class RectangleShipTest {
     }
 
     @Test
-    void test_isSunk() {
+    public void test_isSunk() {
         RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 1, 3, 's', '*');
         assertEquals(false, ship.isSunk());
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
@@ -62,7 +62,7 @@ public class RectangleShipTest {
     }
 
     @Test
-    void test_getDisplayInfoAt() {
+    public void test_getDisplayInfoAt() {
         RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 1, 3, 's', '*');
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
         assertEquals('*', ship.getDisplayInfoAt(new Coordinate(1, 2)));
@@ -71,7 +71,7 @@ public class RectangleShipTest {
     }
 
     @Test
-    void test_getName() {
+    public void test_getName() {
         RectangleShip<Character> sub = new RectangleShip<>("submarine", new Coordinate(1, 2), 1, 3, 's', '*');
         assertEquals("submarine", sub.getName());
         RectangleShip<Character> most_powerful = new RectangleShip<>("Yamato", new Coordinate(1, 2), 1, 3, 's', '*');
@@ -80,7 +80,7 @@ public class RectangleShipTest {
     }
 
     @Test
-    void test_getCoordinates() {
+    public void test_getCoordinates() {
         HashSet<Coordinate> cmp_set = new HashSet<>();
         cmp_set.add(new Coordinate(1, 2));
         cmp_set.add(new Coordinate(2, 2));

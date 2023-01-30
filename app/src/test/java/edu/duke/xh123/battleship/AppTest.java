@@ -58,13 +58,13 @@ class AppTest {
         expectedBodys[1] = "A  | | | |  A\n" +
                 "B  | |d| |  B\n" +
                 "C  | |d| |  C\n" +
-                "D  |d|d|d|  D\n" +
+                "D  | |d| |  D\n" +
                 "E  | | | |  E\n";
         expectedBodys[2] = "A  | | | |  A\n" +
                 "B  | |d| |  B\n" +
                 "C  | |d| |  C\n" +
-                "D  |d|d|d|  D\n" +
-                "E  | | |d|d E\n";
+                "D  | |d| |  D\n" +
+                "E  | | | |  E\n";
         for (int i = 0; i < expectedBodys.length; ++i) {
             app.doOnePlacement();
             assertEquals(prompt + expectedHeader + expectedBodys[i] + expectedHeader, bytes.toString());

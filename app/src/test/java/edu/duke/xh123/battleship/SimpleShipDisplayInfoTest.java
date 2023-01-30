@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class SimpleShipDisplayInfoTest {
     @Test
-    void test_constructor_and_getInfo() {
+    public void test_constructor_and_getInfo() {
         SimpleShipDisplayInfo<Character> char_info = new SimpleShipDisplayInfo<>('s', '*');
         assertEquals('s', char_info.getInfo(new Coordinate(1, 1), false));
         assertEquals('*', char_info.getInfo(new Coordinate(1, 1), true));
