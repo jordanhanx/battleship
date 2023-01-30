@@ -78,4 +78,21 @@ public class RectangleShipTest {
         assertNotEquals("Missouri", most_powerful.getName());
         assertEquals("Yamato", most_powerful.getName());
     }
+
+    @Test
+    void test_getCoordinates() {
+        HashSet<Coordinate> cmp_set = new HashSet<>();
+        cmp_set.add(new Coordinate(1, 2));
+        cmp_set.add(new Coordinate(2, 2));
+        cmp_set.add(new Coordinate(1, 3));
+        cmp_set.add(new Coordinate(2, 3));
+        RectangleShip<Character> ship = new RectangleShip<>("test", new Coordinate(1, 2), 2, 2, 's', '*');
+        Iterable<Coordinate> s1 = ship.getCoordinates();
+        int cnt = 0;
+        for (Coordinate c : s1) {
+            assertEquals(true, cmp_set.contains(c));
+            cnt++;
+        }
+        assertEquals(cmp_set.size(), cnt);
+    }
 }
