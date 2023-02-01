@@ -10,8 +10,8 @@ import java.io.PrintStream;
 import java.io.Reader;
 
 public class App {
-    private TextPlayer player1;
-    private TextPlayer player2;
+    private final TextPlayer player1;
+    private final TextPlayer player2;
 
     /**
      * Constructs the object of App type.
@@ -37,8 +37,8 @@ public class App {
      * @throws IOException If We Have Io Errors When Reading Or Printing.
      */
     public void doPlacementPhase() throws IOException {
-        player1.doOnePlacement();
-        player2.doOnePlacement();
+        player1.doPlacementPhase();
+        player2.doPlacementPhase();
     }
 
     /**
