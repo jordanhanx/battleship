@@ -15,8 +15,9 @@ public class NoCollisionRuleCheckerTest {
         Ship<Character> s2 = shipFactory.makeSubmarine(new Placement(new Coordinate(2, 1), 'h'));
 
         NoCollisionRuleChecker<Character> checker = new NoCollisionRuleChecker<>(null);
-        assertEquals(false, checker.checkPlacement(s1, b_10by20));
-        assertEquals(true, checker.checkPlacement(s2, b_10by20));
+        assertEquals("That placement is invalid: the ship overlaps another ship.",
+                checker.checkPlacement(s1, b_10by20));
+        assertEquals(null, checker.checkPlacement(s2, b_10by20));
     }
 
     @Test
@@ -33,8 +34,10 @@ public class NoCollisionRuleCheckerTest {
         NoCollisionRuleChecker<Character> checker_0 = new NoCollisionRuleChecker<>(null);
         InBoundsRuleChecker<Character> checker_1 = new InBoundsRuleChecker<>(checker_0);
 
-        assertEquals(false, checker_1.checkPlacement(s1, b_10by20));
-        assertEquals(false, checker_1.checkPlacement(s2, b_10by20));
-        assertEquals(true, checker_1.checkPlacement(s3, b_10by20));
+        assertEquals("That placement is invalid: the ship goes off the top of the board.",
+                checker_1.checkPlacement(s1, b_10by20));
+        assertEquals("That placement is invalid: the ship overlaps another ship.",
+                checker_1.checkPlacement(s2, b_10by20));
+        assertEquals(null, checker_1.checkPlacement(s3, b_10by20));
     }
 }

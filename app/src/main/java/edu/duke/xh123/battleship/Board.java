@@ -14,9 +14,10 @@ public interface Board<T> {
      * Try to add a ship into the board.
      * 
      * @param toAdd is the ship to be added in the board.
-     * @return true if the ship be added successfully, false if not.
+     * @return null if the ship be added successfully, a string indicating what was
+     *         wrong if not.
      */
-    public boolean tryAddShip(Ship<T> toAdd);
+    public String tryAddShip(Ship<T> toAdd);
 
     /**
      * Get the information the view needs at the specific coordinate.

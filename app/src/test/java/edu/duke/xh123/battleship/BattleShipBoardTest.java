@@ -33,19 +33,19 @@ public class BattleShipBoardTest {
         BattleShipBoard<Character> b = new BattleShipBoard<Character>(10, 10);
         Character[][] expect = new Character[10][10];
         checkWhatIsAtBoard(b, expect);
-        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(0, 0), 's', '*'))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(0, 0), 's', '*')) == null) {
             expect[0][0] = 's';
         }
-        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(9, 0), 's', '*'))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(9, 0), 's', '*')) == null) {
             expect[0][9] = 's';
         }
-        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(0, 9), 's', '*'))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(0, 9), 's', '*')) == null) {
             expect[9][0] = 's';
         }
-        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(9, 9), 's', '*'))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(9, 9), 's', '*')) == null) {
             expect[9][9] = 's';
         }
-        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(5, 5), 's', '*'))) {
+        if (b.tryAddShip(new RectangleShip<Character>(new Coordinate(5, 5), 's', '*')) == null) {
             expect[5][5] = 's';
         }
         checkWhatIsAtBoard(b, expect);
@@ -56,14 +56,14 @@ public class BattleShipBoardTest {
         BattleShipBoard<Character> b = new BattleShipBoard<Character>(10, 10);
         AbstractShipFactory<Character> shipFactory = new V1ShipFactory();
         Ship<Character> c1 = shipFactory.makeCarrier(new Placement(new Coordinate(0, 0), 'h'));
-        assertEquals(true, b.tryAddShip(c1));
+        assertEquals(null, b.tryAddShip(c1));
 
         Ship<Character> s1 = shipFactory.makeSubmarine(new Placement(new Coordinate(-1, 0), 'v'));
         Ship<Character> s2 = shipFactory.makeSubmarine(new Placement(new Coordinate(0, 0), 'v'));
         Ship<Character> s3 = shipFactory.makeSubmarine(new Placement(new Coordinate(1, 0), 'v'));
 
-        assertEquals(false, b.tryAddShip(s1));
-        assertEquals(false, b.tryAddShip(s2));
-        assertEquals(true, b.tryAddShip(s3));
+        assertEquals("That placement is invalid: the ship goes off the top of the board.", b.tryAddShip(s1));
+        assertEquals("That placement is invalid: the ship overlaps another ship.", b.tryAddShip(s2));
+        assertEquals(null, b.tryAddShip(s3));
     }
 }

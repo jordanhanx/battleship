@@ -176,7 +176,7 @@ C  | |d|d|d| | | | |  C
 D  | | |d|d|d| | | |  D
 E  | | | |d|d|d| | |  E
 F  | | | | |b|b|b|b|  F
-G  | | |b|b|b|b| | |  G
+G  | | | | | |b|b|b|b G
 H  | | | | | | | | |  H
 I  | | | | | | | | |  I
 J  | | | | | | | | |  J
@@ -192,6 +192,8 @@ S  | | | | | | | | |  S
 T  | | | | | | | | |  T
   0|1|2|3|4|5|6|7|8|9
 Player A where do you want to place a Battleship?
+That placement is invalid: the ship goes off the right of the board.
+Player A where do you want to place a Carrier?
   0|1|2|3|4|5|6|7|8|9
 A s|s| | | | | | | |  A
 B  |s|s| | | | | | |  B
@@ -199,11 +201,11 @@ C  | |d|d|d| | | | |  C
 D  | | |d|d|d| | | |  D
 E  | | | |d|d|d| | |  E
 F  | | | | |b|b|b|b|  F
-G  | | |b|b|b|b| | |  G
-H b| | | | | | | | |  H
-I b| | | | | | | | |  I
-J b| | | | | | | | |  J
-K b| | | | | | | | |  K
+G  | | | | | |b|b|b|b G
+H  | | | | | | | | |  H
+I c|c|c|c|c|c| | | |  I
+J  | | | | | | | | |  J
+K  | | | | | | | | |  K
 L  | | | | | | | | |  L
 M  | | | | | | | | |  M
 N  | | | | | | | | |  N
@@ -222,40 +224,17 @@ C  | |d|d|d| | | | |  C
 D  | | |d|d|d| | | |  D
 E  | | | |d|d|d| | |  E
 F  | | | | |b|b|b|b|  F
-G  | | |b|b|b|b| | |  G
-H b| | | | | | | | |  H
-I b| | |c| | | | | |  I
-J b| | |c| | | | | |  J
-K b| | |c| | | | | |  K
-L  | | |c| | | | | |  L
-M  | | |c| | | | | |  M
-N  | | |c| | | | | |  N
+G  | | | | | |b|b|b|b G
+H  | | | | | | | | |  H
+I c|c|c|c|c|c| | | |  I
+J  |c|c|c|c|c|c| | |  J
+K  | | | | | | | | |  K
+L  | | | | | | | | |  L
+M  | | | | | | | | |  M
+N  | | | | | | | | |  N
 O  | | | | | | | | |  O
 P  | | | | | | | | |  P
 Q  | | | | | | | | |  Q
-R  | | | | | | | | |  R
-S  | | | | | | | | |  S
-T  | | | | | | | | |  T
-  0|1|2|3|4|5|6|7|8|9
-Player A where do you want to place a Carrier?
-  0|1|2|3|4|5|6|7|8|9
-A s|s| | | | | | | |  A
-B  |s|s| | | | | | |  B
-C  | |d|d|d| | | | |  C
-D  | | |d|d|d| | | |  D
-E  | | | |d|d|d| | |  E
-F  | | | | |b|b|b|b|  F
-G  | | |b|b|b|b| | |  G
-H b| | | | | | | | |  H
-I b| | |c| | | | | |  I
-J b| | |c| | | | | |  J
-K b| | |c| | | | | |  K
-L  | | |c| | | |c| |  L
-M  | | |c| | | |c| |  M
-N  | | |c| | | |c| |  N
-O  | | | | | | |c| |  O
-P  | | | | | | |c| |  P
-Q  | | | | | | |c| |  Q
 R  | | | | | | | | |  R
 S  | | | | | | | | |  S
 T  | | | | | | | | |  T

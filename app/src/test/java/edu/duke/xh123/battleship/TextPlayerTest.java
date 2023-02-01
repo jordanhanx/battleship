@@ -27,7 +27,7 @@ public class TextPlayerTest {
     }
 
     @Test
-    public void test_read_placement() throws IOException {
+    public void test_readPlacement() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         TextPlayer player = createTextPlayer(10, 20, "B2V\nC8H\na4v\n", bytes);
 
@@ -46,6 +46,14 @@ public class TextPlayerTest {
     }
 
     @Test
+    public void test_readPlacement_EOF() {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        TextPlayer player = createTextPlayer(10, 20, "", bytes);
+        String prompt = "Please enter a location for a ship:";
+        assertThrows(IllegalArgumentException.class, () -> player.readPlacement(prompt));
+    }
+
+    @Test
     public void test_doOnePlacement() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         TextPlayer player = createTextPlayer(5, 5, "B2V\nd1h\ne3h\n", bytes);
@@ -58,21 +66,37 @@ public class TextPlayerTest {
                 "C  | |d| |  C\n" +
                 "D  | |d| |  D\n" +
                 "E  | | | |  E\n";
-        expectedBodys[1] = "A  | | | |  A\n" +
-                "B  | |d| |  B\n" +
-                "C  | |d| |  C\n" +
-                "D  | |d| |  D\n" +
-                "E  | | | |  E\n";
-        expectedBodys[2] = "A  | | | |  A\n" +
-                "B  | |d| |  B\n" +
-                "C  | |d| |  C\n" +
-                "D  | |d| |  D\n" +
-                "E  | | | |  E\n";
+        // expectedBodys[1] = "A | | | | A\n" +
+        // "B | |d| | B\n" +
+        // "C | |d| | C\n" +
+        // "D | |d| | D\n" +
+        // "E | | | | E\n";
+        expectedBodys[1] = "That placement is invalid: the ship overlaps another ship.\n";
+        // expectedBodys[2] = "A | | | | A\n" +
+        // "B | |d| | B\n" +
+        // "C | |d| | C\n" +
+        // "D | |d| | D\n" +
+        // "E | | | | E\n";
+        expectedBodys[2] = "That placement is invalid: the ship goes off the right of the board.\n";
         for (int i = 0; i < expectedBodys.length; ++i) {
             player.doOnePlacement("Destroyer", (p) -> new V1ShipFactory().makeDestroyer(p));
-            assertEquals(prompt + expectedHeader + expectedBodys[i] + expectedHeader, bytes.toString());
+            if (i == 0) {
+                assertEquals(prompt + expectedHeader + expectedBodys[i] + expectedHeader, bytes.toString());
+            } else {
+                assertEquals(prompt + expectedBodys[i], bytes.toString());
+            }
             bytes.reset();
         }
+    }
+
+    @Test
+    public void test_doPlacementPhase_EOF() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        TextPlayer player = createTextPlayer(5, 5, "", bytes);
+
+        String prompt = "Player A where do you want to place a Destroyer?\n";
+        player.doOnePlacement("Destroyer", (p) -> new V1ShipFactory().makeDestroyer(p));
+        assertEquals(prompt + "That placement is invalid: it does not have the correct format.\n", bytes.toString());
     }
 
     // @Disabled
@@ -90,21 +114,11 @@ public class TextPlayerTest {
                 .getResourceAsStream("output_playerA.txt");
         assertNotNull(expectedStream);
 
-        InputStream oldIn = System.in;
-        PrintStream oldOut = System.out;
-        try {
-            System.setIn(input);
-            System.setOut(out);
-
-            Board<Character> board = new BattleShipBoard<Character>(10, 20);
-            V1ShipFactory shipFactory = new V1ShipFactory();
-            TextPlayer player = new TextPlayer("A", board, new BufferedReader(new InputStreamReader(input)), out,
-                    shipFactory);
-            player.doPlacementPhase();
-        } finally {
-            System.setIn(oldIn);
-            System.setOut(oldOut);
-        }
+        Board<Character> board = new BattleShipBoard<Character>(10, 20);
+        V1ShipFactory shipFactory = new V1ShipFactory();
+        TextPlayer player = new TextPlayer("A", board, new BufferedReader(new InputStreamReader(input)), out,
+                shipFactory);
+        player.doPlacementPhase();
 
         String expected = new String(expectedStream.readAllBytes());
         String actual = bytes.toString();

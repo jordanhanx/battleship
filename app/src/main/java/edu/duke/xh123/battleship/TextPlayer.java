@@ -74,6 +74,9 @@ public class TextPlayer {
     public Placement readPlacement(String prompt) throws IOException {
         out.println(prompt);
         String s = inputReader.readLine();
+        if (s == null) {
+            throw new IllegalArgumentException("inputReader.readLine return null");
+        }
         return new Placement(s);
     }
 
@@ -86,10 +89,18 @@ public class TextPlayer {
      * @throws IOException If We Have Io Errors When Reading Or Printing.
      */
     public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
-        Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
-        Ship<Character> s = createFn.apply(p);
-        theBoard.tryAddShip(s);
-        out.print(view.displayMyOwnBoard());
+        try {
+            Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
+            Ship<Character> s = createFn.apply(p);
+            String msg = theBoard.tryAddShip(s);
+            if (msg == null) {
+                out.print(view.displayMyOwnBoard());
+            } else {
+                out.println(msg);
+            }
+        } catch (IllegalArgumentException e) {
+            out.println("That placement is invalid: it does not have the correct format.");
+        }
     }
 
     /**
