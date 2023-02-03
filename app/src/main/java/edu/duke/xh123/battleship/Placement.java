@@ -10,37 +10,28 @@ public class Placement {
     /**
      * Constructs a Placement with a Coordinate and a char
      * 
-     * @param cood   is the Coordinate of the newly constructed Placement.
-     * @param orient is the orientation of the newly constructed Placement.
-     * @throws IllegalArgumentException if orientation is illegal (neither 'H'/'h'
-     *                                  nor 'V'/'v')
+     * @param c is the Coordinate of the newly constructed Placement.
+     * @param o is the orientation of the newly constructed Placement.
+     * @throws IllegalArgumentException if Coordinate is illegal
      */
     public Placement(Coordinate c, char o) {
-        char upper_o = Character.toUpperCase(o);
-        if (upper_o != 'H' && upper_o != 'V') {
-            throw new IllegalArgumentException("Orientation should be either 'H'/'h' or 'V'/'v' but is " + o);
-        }
         this.cood = c;
-        this.orient = upper_o;
+        this.orient = Character.toUpperCase(o);
     }
 
     /**
-     * Constructs a Coordinate with the description String like "A2"
-     * that corresponds to the coordinate: row=0, column=2.
+     * Constructs a Placement with the description String like "A0V"
      * 
      * @param descr is the description of the newly constructed Coordinate.
      * @throws IllegalArgumentException if the description is illegal.
      */
     public Placement(String descr) {
         if (descr.length() != 3) {
-            throw new IllegalArgumentException("Placement's description must be like 'A9H' but is " + descr);
-        }
-        char upper_o = Character.toUpperCase(descr.charAt(2));
-        if (upper_o != 'H' && upper_o != 'V') {
-            throw new IllegalArgumentException("Orientation should be either 'H'/'h' or 'V'/'v' but is " + descr);
+            throw new IllegalArgumentException(
+                    "Placement's description must be the same length as 'A0V' but is " + descr);
         }
         this.cood = new Coordinate(descr.substring(0, 2));
-        this.orient = upper_o;
+        this.orient = Character.toUpperCase(descr.charAt(2));
     }
 
     public Coordinate getCoordinate() {

@@ -18,7 +18,7 @@ public class TextPlayer {
     private final BufferedReader inputReader;
     private final PrintStream out;
     private final AbstractShipFactory<Character> shipFactory;
-    private final ArrayList<String> shipsToPlace;
+    protected final ArrayList<String> shipsToPlace;
     private final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
 
     /**

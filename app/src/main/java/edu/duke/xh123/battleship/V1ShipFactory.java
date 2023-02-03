@@ -15,9 +15,14 @@ public class V1ShipFactory implements AbstractShipFactory<Character> {
      * @param name   is the name of this ship.
      */
     protected Ship<Character> createShip(Placement where, int w, int h, char letter, String name) {
-        int width = where.getOrientation() == 'V' ? w : h;
-        int height = where.getOrientation() == 'V' ? h : w;
-        return new RectangleShip<Character>(name, where.getCoordinate(), width, height, letter, '*');
+        if (where.getOrientation() == 'V') {
+            return new RectangleShip<Character>(name, where.getCoordinate(), w, h, letter, '*');
+        } else if (where.getOrientation() == 'H') {
+            return new RectangleShip<Character>(name, where.getCoordinate(), h, w, letter, '*');
+        } else {
+            throw new IllegalArgumentException(
+                    "Placement's orientation should be veritcal or horizontal, but " + where.getOrientation());
+        }
     }
 
     @Override

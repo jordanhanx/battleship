@@ -1,6 +1,7 @@
 package edu.duke.xh123.battleship;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -77,5 +78,11 @@ public class V1ShipFactoryTest {
         Placement neg_v1_1 = new Placement(new Coordinate(-1, -1), 'V');
         Ship<Character> s3 = new V1ShipFactory().makeSubmarine(neg_v1_1);
         checkShip(s3, "Submarine", 's', new Coordinate(-1, -1), new Coordinate(0, -1));
+    }
+
+    @Test
+    public void test_invalidPlacement() {
+        Placement invalid_p = new Placement(new Coordinate(1, 2), 'x');
+        assertThrows(IllegalArgumentException.class, () -> new V1ShipFactory().makeBattleship(invalid_p));
     }
 }
