@@ -1,6 +1,7 @@
 package edu.duke.xh123.battleship;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class TextPlayer {
         out.println(prompt);
         String s = inputReader.readLine();
         if (s == null) {
-            throw new IllegalArgumentException("inputReader.readLine return null");
+            throw new EOFException("inputReader.readLine() return null");
         }
         return new Placement(s);
     }
@@ -89,17 +90,21 @@ public class TextPlayer {
      * @throws IOException If We Have Io Errors When Reading Or Printing.
      */
     public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
-        try {
-            Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
-            Ship<Character> s = createFn.apply(p);
-            String msg = theBoard.tryAddShip(s);
-            if (msg == null) {
-                out.print(view.displayMyOwnBoard());
-            } else {
-                out.println(msg);
+        boolean is_done = false;
+        while (!is_done) {
+            try {
+                Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
+                Ship<Character> s = createFn.apply(p);
+                String msg = theBoard.tryAddShip(s);
+                if (msg == null) {
+                    out.print(view.displayMyOwnBoard());
+                    is_done = true; // add ship successfully
+                } else {
+                    out.println(msg);
+                }
+            } catch (IllegalArgumentException e) {
+                out.println("That placement is invalid: it does not have the correct format.");
             }
-        } catch (IllegalArgumentException e) {
-            out.println("That placement is invalid: it does not have the correct format.");
         }
     }
 
