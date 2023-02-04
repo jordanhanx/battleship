@@ -13,9 +13,9 @@ import java.util.function.Function;
  * This is an type of text player
  */
 public class TextPlayer {
-    private final String name;
-    private final Board<Character> theBoard;
-    private final BoardTextView view;
+    final String name;
+    final Board<Character> theBoard;
+    final BoardTextView view;
     private final BufferedReader inputReader;
     private final PrintStream out;
     private final AbstractShipFactory<Character> shipFactory;
@@ -69,6 +69,22 @@ public class TextPlayer {
      * This makes the program read input String from inputSource.
      * 
      * @param prompt is the message to prompt user input some String.
+     * @return the Coordinate information.
+     * @throws IOException if we have IO errors when reading or printing.
+     */
+    public Coordinate readCoordinate(String prompt) throws IOException {
+        out.println(prompt);
+        String c = inputReader.readLine();
+        if (c == null) {
+            throw new EOFException("inputReader.readLine() return null");
+        }
+        return new Coordinate(c);
+    }
+
+    /**
+     * This makes the program read input String from inputSource.
+     * 
+     * @param prompt is the message to prompt user input some String.
      * @return the Placement information.
      * @throws IOException if we have IO errors when reading or printing.
      */
@@ -90,15 +106,14 @@ public class TextPlayer {
      * @throws IOException If We Have Io Errors When Reading Or Printing.
      */
     public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
-        boolean is_done = false;
-        while (!is_done) {
+        while (true) {
             try {
                 Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
                 Ship<Character> s = createFn.apply(p);
                 String msg = theBoard.tryAddShip(s);
                 if (msg == null) {
                     out.print(view.displayMyOwnBoard());
-                    is_done = true; // add ship successfully
+                    return; // add ship successfully
                 } else {
                     out.println(msg);
                 }
@@ -137,5 +152,40 @@ public class TextPlayer {
      */
     public boolean isLost() {
         return theBoard.shipsAreAllSunk();
+    }
+
+    /**
+     * Plays one turn.
+     * 
+     * @param enemyBoard is the enmey's board.
+     * @param enemyView  is the enemy's view.
+     * @param enemyName  is the enemy's name.
+     * @throws IOException If We Have Io Errors When Reading Or Printing.
+     */
+    public void playOneTurn(Board<Character> enemyBoard, BoardTextView enemyView, String enemyName) throws IOException {
+        out.println("Player " + name + "'s turn:");
+        out.print(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your ocean",
+                "Player " + enemyName + "'s ocean"));
+        while (true) {
+            try {
+                Coordinate c = readCoordinate("Player " + name + " where do you want to fire at?");
+                Ship<Character> s = enemyBoard.fireAt(c);
+                if (s != null) {
+                    out.println("You hit a " + s.getName() + "!");
+                } else {
+                    out.println("You missed!");
+                }
+                return; // play one turn successfully
+            } catch (IllegalArgumentException e) {
+                out.println("That coordinate is invalid: it does not have the correct format.");
+            }
+        }
+    }
+
+    /**
+     * Announce the winner of the game
+     */
+    public void announceVictory() {
+        out.println("Player " + name + " is the winner!");
     }
 }

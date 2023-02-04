@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 class AppTest {
+
     // @Disabled
     @Test
     @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE) // Ensure proper serialization of

@@ -42,6 +42,27 @@ public class App {
     }
 
     /**
+     * Play attacking phase of the game, until one player is lost.
+     * 
+     * @throws IOException If We Have Io Errors When Reading Or Printing.
+     */
+    public void doAttackingPhase() throws IOException {
+        TextPlayer current = player1;
+        TextPlayer next = player2;
+        while (true) {
+            current.playOneTurn(next.theBoard, next.view, next.name);
+            if (next.isLost()) {
+                current.announceVictory();
+                return;
+            } else {
+                TextPlayer temp = current;
+                current = next;
+                next = temp;
+            }
+        }
+    }
+
+    /**
      * The entry point of the entire program.
      * 
      * @throws IOException If We Have Io Errors When Reading Or Printing.
@@ -49,5 +70,6 @@ public class App {
     public static void main(String[] args) throws IOException {
         App app = new App(10, 20, new InputStreamReader(System.in), System.out);
         app.doPlacementPhase();
+        app.doAttackingPhase();
     }
 }
