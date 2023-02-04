@@ -37,8 +37,9 @@ public class RectangleShip<T> extends BasicShip<T> {
      * @param height        is the rectangle's height.
      * @param myDisplayInfo is the ship's display information.
      */
-    public RectangleShip(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo) {
-        super(makeCoords(upperLeft, width, height), myDisplayInfo);
+    public RectangleShip(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo,
+            ShipDisplayInfo<T> enemyDisplayInfo) {
+        super(makeCoords(upperLeft, width, height), myDisplayInfo, enemyDisplayInfo);
         this.name = name;
     }
 
@@ -54,7 +55,8 @@ public class RectangleShip<T> extends BasicShip<T> {
      * @param onHit     is the display info of the ship's hit part.
      */
     public RectangleShip(String name, Coordinate upperLeft, int width, int height, T data, T onHit) {
-        this(name, upperLeft, width, height, new SimpleShipDisplayInfo<T>(data, onHit));
+        this(name, upperLeft, width, height, new SimpleShipDisplayInfo<T>(data, onHit),
+                new SimpleShipDisplayInfo<T>(null, data));
     }
 
     /**
@@ -69,6 +71,7 @@ public class RectangleShip<T> extends BasicShip<T> {
         this("testship", upperLeft, 1, 1, data, onHit);
     }
 
+    @Override
     public String getName() {
         return name;
     }

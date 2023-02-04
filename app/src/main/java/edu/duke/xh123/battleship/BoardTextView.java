@@ -1,5 +1,7 @@
 package edu.duke.xh123.battleship;
 
+import java.util.function.Function;
+
 /**
  * This class handles textual display of a Board (i.e., converting it to a
  * string to show to the user). It supports two ways to display the Board: one
@@ -28,16 +30,17 @@ public class BoardTextView {
     /**
      * This makes what the board will display.
      * 
+     * @param getSquareFn is the display function according to perspective.
      * @return the String that represent the body part of the board's display.
      */
-    public String displayMyOwnBoard() {
+    protected String displayAnyBoard(Function<Coordinate, Character> getSquareFn) {
         StringBuilder body = new StringBuilder("");
         for (int row = 0; row < toDisplay.getHeight(); ++row) {
             body.append((char) ('A' + row) + " ");
             String sep = ""; // start with nothing to separate, then switch to | to separate
             for (int col = 0; col < toDisplay.getWidth(); ++col) {
                 body.append(sep);
-                Character c = toDisplay.whatIsAt(new Coordinate(row, col));
+                Character c = getSquareFn.apply(new Coordinate(row, col));
                 if (c != null) {
                     body.append(c);
                 } else {
@@ -49,6 +52,24 @@ public class BoardTextView {
             body.append("\n");
         }
         return makeHeader() + body.toString() + makeHeader();
+    }
+
+    /**
+     * This makes what the board will display for self.
+     * 
+     * @return the String that represent the body part of the board's display.
+     */
+    public String displayMyOwnBoard() {
+        return displayAnyBoard((c) -> toDisplay.whatIsAtForSelf(c));
+    }
+
+    /**
+     * This makes what the board will display for enemy.
+     * 
+     * @return the String that represent the body part of the board's display.
+     */
+    public String displayEnemyBoard() {
+        return displayAnyBoard((c) -> toDisplay.whatIsAtForEnemy(c));
     }
 
     /**

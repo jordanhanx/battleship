@@ -17,7 +17,7 @@ public class TextPlayerTest {
     private TextPlayer createTextPlayer(int w, int h, String inputData, OutputStream bytes) {
         BufferedReader input = new BufferedReader(new StringReader(inputData));
         PrintStream output = new PrintStream(bytes, true);
-        Board<Character> board = new BattleShipBoard<Character>(w, h);
+        Board<Character> board = new BattleShipBoard<>(w, h, 'X');
         V1ShipFactory shipFactory = new V1ShipFactory();
         return new TextPlayer("A", board, input, output, shipFactory);
     }
@@ -93,7 +93,7 @@ public class TextPlayerTest {
         BufferedReader input = new BufferedReader(new StringReader("A0V\nB0H\nB1v\nd2V\nC2v\nAaX\nA4x\na4V"));
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream output = new PrintStream(bytes, true);
-        Board<Character> board = new BattleShipBoard<Character>(6, 6);
+        Board<Character> board = new BattleShipBoard<>(6, 6, 'X');
         TextPlayer tp1 = new TextPlayer("test1", board, input, output, new V1ShipFactory()) {
             protected void setupShipCreationList() {
                 shipsToPlace.addAll(Collections.nCopies(1, "Submarine"));

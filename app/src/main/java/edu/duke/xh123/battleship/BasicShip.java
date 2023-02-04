@@ -8,19 +8,23 @@ import java.util.HashMap;
 public abstract class BasicShip<T> implements Ship<T> {
     protected HashMap<Coordinate, Boolean> myPieces;
     protected ShipDisplayInfo<T> myDisplayInfo;
+    protected ShipDisplayInfo<T> enemyDisplayInfo;
 
     /**
      * Constructs a BasicShip with some Iterable Coordinates
      * 
-     * @param where         is some Iterable Coordinates occupied by the ship .
-     * @param myDisplayInfo is the ship's display information.
+     * @param where            is some Iterable Coordinates occupied by the ship .
+     * @param myDisplayInfo    is the ship's display information for self.
+     * @param enemyDisplayInfo is the ship's display information for enemy.
      */
-    public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo) {
+    public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo,
+            ShipDisplayInfo<T> enemyDisplayInfo) {
         this.myPieces = new HashMap<>();
-        this.myDisplayInfo = myDisplayInfo;
         for (Coordinate c : where) {
             this.myPieces.put(c, false);
         }
+        this.myDisplayInfo = myDisplayInfo;
+        this.enemyDisplayInfo = enemyDisplayInfo;
     }
 
     /**
@@ -58,9 +62,13 @@ public abstract class BasicShip<T> implements Ship<T> {
     }
 
     @Override
-    public T getDisplayInfoAt(Coordinate where) {
+    public T getDisplayInfoAt(Coordinate where, boolean myShip) {
         checkCoordinateInThisShip(where);
-        return myDisplayInfo.getInfo(where, wasHitAt(where));
+        if (myShip) {
+            return myDisplayInfo.getInfo(where, wasHitAt(where));
+        } else {
+            return enemyDisplayInfo.getInfo(where, wasHitAt(where));
+        }
     }
 
     @Override

@@ -20,11 +20,29 @@ public interface Board<T> {
     public String tryAddShip(Ship<T> toAdd);
 
     /**
-     * Get the information the view needs at the specific coordinate.
+     * Get the information the self view needs at the specific coordinate.
      * 
      * @param where is the Coordinate to find information.
      * @return the information the view needs, or null if nothing was at the
      *         coordinate.
      */
-    public T whatIsAt(Coordinate where);
+    public T whatIsAtForSelf(Coordinate where);
+
+    /**
+     * Get the information the enemy view needs at the specific coordinate.
+     * 
+     * @param where is the Coordinate to find information.
+     * @return the information the view needs, or null if nothing was at the
+     *         coordinate.
+     */
+    public T whatIsAtForEnemy(Coordinate where);
+
+    /**
+     * Try to "shoot" at something on the board
+     * 
+     * 
+     * @param c is the coordinate to be shot in the board.
+     * @return the ship if it is be shot successfully, else return null
+     */
+    public Ship<T> fireAt(Coordinate c);
 }

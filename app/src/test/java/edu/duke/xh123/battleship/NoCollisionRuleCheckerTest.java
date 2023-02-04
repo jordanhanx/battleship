@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class NoCollisionRuleCheckerTest {
     @Test
     public void test_NoCollisionRule() {
-        Board<Character> b_10by20 = new BattleShipBoard<Character>(10, 20);
+        Board<Character> b_10by20 = new BattleShipBoard<>(10, 20, 'X');
         AbstractShipFactory<Character> shipFactory = new V1ShipFactory();
         Ship<Character> c1 = shipFactory.makeCarrier(new Placement(new Coordinate(0, 0), 'V'));
         b_10by20.tryAddShip(c1);
@@ -22,7 +22,7 @@ public class NoCollisionRuleCheckerTest {
 
     @Test
     public void test_InBoundsRule_and_NoCollisionRule() {
-        Board<Character> b_10by20 = new BattleShipBoard<Character>(10, 20);
+        Board<Character> b_10by20 = new BattleShipBoard<>(10, 20, 'X');
         AbstractShipFactory<Character> shipFactory = new V1ShipFactory();
         Ship<Character> c1 = shipFactory.makeCarrier(new Placement(new Coordinate(0, 0), 'h'));
         b_10by20.tryAddShip(c1);

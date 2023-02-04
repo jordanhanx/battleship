@@ -22,8 +22,8 @@ public class App {
      * @param out         is where to print Board's text view.
      */
     public App(int width, int height, Reader inputSource, PrintStream out) {
-        Board<Character> b1 = new BattleShipBoard<Character>(width, height);
-        Board<Character> b2 = new BattleShipBoard<Character>(width, height);
+        Board<Character> b1 = new BattleShipBoard<>(width, height, 'X');
+        Board<Character> b2 = new BattleShipBoard<>(width, height, 'X');
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         V1ShipFactory factory = new V1ShipFactory();
         this.player1 = new TextPlayer("A", b1, input, System.out, factory);

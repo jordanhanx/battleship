@@ -65,9 +65,12 @@ public class RectangleShipTest {
     public void test_getDisplayInfoAt() {
         RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 2), 1, 3, 's', '*');
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 2)));
-        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(1, 2)));
-        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 2)));
-        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(3, 2)));
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(1, 2), true));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 2), true));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(3, 2), true));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(1, 2), false));
+        assertEquals(null, ship.getDisplayInfoAt(new Coordinate(2, 2), false));
+        assertEquals(null, ship.getDisplayInfoAt(new Coordinate(3, 2), false));
     }
 
     @Test
