@@ -88,4 +88,22 @@ public class BoardTextViewTest {
         assertEquals(selfView, view.displayMyOwnBoard());
         assertEquals(enemyView, view.displayEnemyBoard());
     }
+
+    @Test
+    public void test_displayMyBoardWithEnemyNextToIt() {
+        Board<Character> b1 = new BattleShipBoard<>(4, 3, 'X');
+        BoardTextView view = new BoardTextView(b1);
+        b1.tryAddShip(new V1ShipFactory().makeSubmarine(new Placement("B0H")));
+        b1.tryAddShip(new V1ShipFactory().makeDestroyer(new Placement("A3V")));
+        b1.fireAt(new Coordinate(0, 0));
+        b1.fireAt(new Coordinate(0, 3));
+        b1.fireAt(new Coordinate(1, 1));
+        String expect = "     h1                       h2\n" +
+                "  0|1|2|3                    0|1|2|3\n" +
+                "A  | | |* A                A X| | |d A\n" +
+                "B s|*| |d B                B  |s| |  B\n" +
+                "C  | | |d C                C  | | |  C\n" +
+                "  0|1|2|3                    0|1|2|3\n";
+        assertEquals(expect, view.displayMyBoardWithEnemyNextToIt(view, "h1", "h2"));
+    }
 }

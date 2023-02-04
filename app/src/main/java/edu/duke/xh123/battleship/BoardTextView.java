@@ -89,4 +89,22 @@ public class BoardTextView {
         return ans.toString();
     }
 
+    /**
+     * This method should put "this" view's board's "my own board" on the left, and
+     * enemyView's "enemy board" on the right.
+     * 
+     * @return the text game board.
+     */
+    public String displayMyBoardWithEnemyNextToIt(BoardTextView enemyView, String myHeader, String enemyHeader) {
+        StringBuilder text = new StringBuilder("");
+        text.append(" ".repeat(5) + myHeader + " ".repeat(2 * toDisplay.getWidth() + 22 - 5 - myHeader.length())
+                + enemyHeader + "\n");
+        String[] my_arr = this.displayMyOwnBoard().split("\n");
+        String[] enemy_arr = enemyView.displayEnemyBoard().split("\n");
+        for (int row = 0; row < toDisplay.getHeight() + 2; ++row) {
+            text.append(my_arr[row] + " ".repeat(2 * toDisplay.getWidth() + 19 - my_arr[row].length()) + enemy_arr[row]
+                    + "\n");
+        }
+        return text.toString();
+    }
 }
