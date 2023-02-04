@@ -119,4 +119,14 @@ public class BattleShipBoard<T> implements Board<T> {
         enemyMisses.add(c);
         return null;
     }
+
+    @Override
+    public boolean shipsAreAllSunk() {
+        for (Ship<T> s : myShips) {
+            if (!s.isSunk()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

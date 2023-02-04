@@ -166,4 +166,26 @@ public class TextPlayerTest {
                 "  0|1|2|3|4|5\n";
         assertEquals(expectedOutput, bytes.toString());
     }
+
+    @Test
+    public void test_isLost() throws IOException {
+        BufferedReader input = new BufferedReader(new StringReader("B1V"));
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintStream output = new PrintStream(bytes, true);
+
+        BattleShipBoard<Character> b = new BattleShipBoard<>(5, 5, 'X');
+
+        TextPlayer p1 = new TextPlayer("test1", b, input, output, new V1ShipFactory()) {
+            protected void setupShipCreationList() {
+                shipsToPlace.addAll(Collections.nCopies(1, "Submarine"));
+            }
+        };
+        p1.doPlacementPhase();
+
+        assertFalse(p1.isLost());
+        b.fireAt(new Coordinate(1, 1));
+        assertFalse(p1.isLost());
+        b.fireAt(new Coordinate(2, 1));
+        assertTrue(p1.isLost());
+    }
 }

@@ -105,4 +105,17 @@ public class BattleShipBoardTest {
         }
         assertTrue(s1.isSunk());
     }
+
+    @Test
+    public void test_shipsAreAllSunk() {
+        BattleShipBoard<Character> b = new BattleShipBoard<>(5, 5, 'X');
+        assertTrue(b.shipsAreAllSunk());
+        Ship<Character> s1 = new V1ShipFactory().makeSubmarine(new Placement("B1V"));
+        b.tryAddShip(s1);
+        assertFalse(b.shipsAreAllSunk());
+        b.fireAt(new Coordinate(1, 1));
+        assertFalse(b.shipsAreAllSunk());
+        b.fireAt(new Coordinate(2, 1));
+        assertTrue(b.shipsAreAllSunk());
+    }
 }

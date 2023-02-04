@@ -45,4 +45,11 @@ public interface Board<T> {
      * @return the ship if it is be shot successfully, else return null
      */
     public Ship<T> fireAt(Coordinate c);
+
+    /**
+     * Checks if all ships on this board have sunk.
+     * 
+     * @return true if all sunk.
+     */
+    public boolean shipsAreAllSunk();
 }
