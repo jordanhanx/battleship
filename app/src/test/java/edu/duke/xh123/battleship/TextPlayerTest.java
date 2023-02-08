@@ -37,13 +37,17 @@ public class TextPlayerTest {
     @Test
     public void test_readPlacement() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        TextPlayer player = createTextPlayer("Test", 10, 20, "B2V\nC8H\na4v\n", bytes);
+        TextPlayer player = createTextPlayer("Test", 10, 20, "B2V\nC8H\na4v\nd7U\ne3d\na0l\ng3R", bytes);
 
         String prompt = "Please enter a location for a ship:";
-        Placement[] expected = new Placement[3];
+        Placement[] expected = new Placement[7];
         expected[0] = new Placement(new Coordinate(1, 2), 'V');
         expected[1] = new Placement(new Coordinate(2, 8), 'H');
         expected[2] = new Placement(new Coordinate(0, 4), 'V');
+        expected[3] = new Placement(new Coordinate(3, 7), 'U');
+        expected[4] = new Placement(new Coordinate(4, 3), 'D');
+        expected[5] = new Placement(new Coordinate(0, 0), 'L');
+        expected[6] = new Placement(new Coordinate(6, 3), 'R');
 
         for (int i = 0; i < expected.length; i++) {
             Placement p = player.readPlacement(prompt);
@@ -129,11 +133,11 @@ public class TextPlayerTest {
 
     @Test
     public void test_doPlacementPhase() throws IOException {
-        BufferedReader input = new BufferedReader(new StringReader("A0V\nB0H\nB1v\nd2V\nC2v\nAaX\nA4x\na4V"));
+        BufferedReader input = new BufferedReader(new StringReader("A0V\nB0H\nB1v\ne2r\nd2r\nAau\nA3V\na3U"));
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream output = new PrintStream(bytes, true);
         Board<Character> board = new BattleShipBoard<>(6, 6, 'X');
-        TextPlayer tp1 = new TextPlayer("Test", board, input, output, new V1ShipFactory()) {
+        TextPlayer tp1 = new TextPlayer("Test", board, input, output, new V2ShipFactory()) {
             protected void setupShipCreationList() {
                 shipsToPlace.addAll(Collections.nCopies(1, "Submarine"));
                 shipsToPlace.addAll(Collections.nCopies(1, "Destroyer"));
@@ -150,15 +154,27 @@ public class TextPlayerTest {
                 "E  | | | | |  E\n" +
                 "F  | | | | |  F\n" +
                 "  0|1|2|3|4|5\n" +
-                "Player Test: you are going to place the following ships (which are all\n" +
+                "Player Test: you are going to place the following ships (which are not all\n" +
                 "rectangular). For each ship, type the coordinate of the upper left\n" +
                 "side of the ship, followed by either H (for horizontal) or V (for\n" +
-                "vertical).  For example M4H would place a ship horizontally starting\n" +
-                "at M4 and going to the right.  You have\n\n" +
+                "vertical) for Submarines/Destroyers and one in U (for Up), D (for\n" +
+                "Down), L (for Left) and R (for Rigth) for Battleships/Carriers.\n" +
+                "For example M4H would place a ship horizontally starting\n" +
+                "at M4 and going to the right.  You have\n" + "\n" +
                 "2 \"Submarines\" ships that are 1x2\n" +
                 "3 \"Destroyers\" that are 1x3\n" +
-                "3 \"Battleships\" that are 1x4\n" +
-                "2 \"Carriers\" that are 1x6\n" +
+                "3 \"Battleships\" that that are now shaped as shown below\n" +
+                "      b      OR    b         bbb         b\n" +
+                "     bbb           bb   OR    b     OR  bb\n" +
+                "                   b                     b\n\n" +
+                "      Up         Right       Down      Left\n" +
+                "2 \"Carriers\" that are now shaped as shown below\n" +
+                "      c                       c             \n" +
+                "      c           cccc        cc         ccc\n" +
+                "      cc   OR    ccc      OR  cc   OR  cccc\n" +
+                "      cc                       c\n" +
+                "       c                       c\n\n" +
+                "      Up         Right       Down      Left\n" +
                 "Player Test where do you want to place a Submarine?\n" +
                 "  0|1|2|3|4|5\n" +
                 "A s| | | | |  A\n" +
@@ -185,9 +201,9 @@ public class TextPlayerTest {
                 "  0|1|2|3|4|5\n" +
                 "A s| | | | |  A\n" +
                 "B s|d| | | |  B\n" +
-                "C  |d|b| | |  C\n" +
+                "C  |d| | | |  C\n" +
                 "D  |d|b| | |  D\n" +
-                "E  | |b| | |  E\n" +
+                "E  | |b|b| |  E\n" +
                 "F  | |b| | |  F\n" +
                 "  0|1|2|3|4|5\n" +
                 "Player Test where do you want to place a Carrier?\n" +
@@ -196,12 +212,12 @@ public class TextPlayerTest {
                 "That placement is invalid: it does not have the correct format.\n" +
                 "Player Test where do you want to place a Carrier?\n" +
                 "  0|1|2|3|4|5\n" +
-                "A s| | | |c|  A\n" +
-                "B s|d| | |c|  B\n" +
-                "C  |d|b| |c|  C\n" +
-                "D  |d|b| |c|  D\n" +
-                "E  | |b| |c|  E\n" +
-                "F  | |b| |c|  F\n" +
+                "A s| | |c| |  A\n" +
+                "B s|d| |c| |  B\n" +
+                "C  |d| |c|c|  C\n" +
+                "D  |d|b|c|c|  D\n" +
+                "E  | |b|b|c|  E\n" +
+                "F  | |b| | |  F\n" +
                 "  0|1|2|3|4|5\n";
         assertEquals(expectedOutput, bytes.toString());
     }

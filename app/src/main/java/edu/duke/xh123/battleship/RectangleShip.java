@@ -6,7 +6,6 @@ import java.util.HashSet;
  * This is an specific type of Ship that is ractangle in our Battleship game.
  */
 public class RectangleShip<T> extends BasicShip<T> {
-    private final String name;
 
     /**
      * This static method should generate the set of coordinates for a rectangle
@@ -31,16 +30,16 @@ public class RectangleShip<T> extends BasicShip<T> {
      * Constructs a rectangle ship with specified upperLeft coordinate, width and
      * height.
      * 
-     * @param name          is the name of this ship.
-     * @param upperLeft     is the coordinate of rectangle's upper left corner.
-     * @param width         is the rectangle's width.
-     * @param height        is the rectangle's height.
-     * @param myDisplayInfo is the ship's display information.
+     * @param name             is the name of this ship.
+     * @param upperLeft        is the coordinate of rectangle's upper left corner.
+     * @param width            is the rectangle's width.
+     * @param height           is the rectangle's height.
+     * @param myDisplayInfo    is the ship's self display information.
+     * @param enemyDisplayInfo is the ship's display information for enemy.
      */
     public RectangleShip(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo,
             ShipDisplayInfo<T> enemyDisplayInfo) {
-        super(makeCoords(upperLeft, width, height), myDisplayInfo, enemyDisplayInfo);
-        this.name = name;
+        super(name, makeCoords(upperLeft, width, height), myDisplayInfo, enemyDisplayInfo);
     }
 
     /**
@@ -71,8 +70,4 @@ public class RectangleShip<T> extends BasicShip<T> {
         this("testship", upperLeft, 1, 1, data, onHit);
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 }

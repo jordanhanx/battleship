@@ -25,7 +25,8 @@ public class App {
         Board<Character> b1 = new BattleShipBoard<>(width, height, 'X');
         Board<Character> b2 = new BattleShipBoard<>(width, height, 'X');
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-        V1ShipFactory factory = new V1ShipFactory();
+        // V1ShipFactory factory = new V1ShipFactory();
+        V2ShipFactory factory = new V2ShipFactory();
         this.player1 = new TextPlayer("A", b1, input, System.out, factory);
         this.player2 = new TextPlayer("B", b2, input, System.out, factory);
     }
@@ -71,5 +72,6 @@ public class App {
         App app = new App(10, 20, new InputStreamReader(System.in), System.out);
         app.doPlacementPhase();
         app.doAttackingPhase();
+        return;
     }
 }
