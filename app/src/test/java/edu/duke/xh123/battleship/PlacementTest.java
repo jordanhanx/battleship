@@ -103,23 +103,23 @@ public class PlacementTest {
         Placement p3 = new Placement("d7X");
 
         assertEquals('H', p1.getOrientation());
-        p1.rotateQuarterClockwise();
+        p1 = p1.rotateQuarterClockwise();
         assertEquals('V', p1.getOrientation());
-        p1.rotateQuarterClockwise();
+        p1 = p1.rotateQuarterClockwise();
         assertEquals('_', p1.getOrientation());
-        p1.rotateQuarterClockwise();
+        p1 = p1.rotateQuarterClockwise();
         assertEquals('-', p1.getOrientation());
-        p1.rotateQuarterClockwise();
+        p1 = p1.rotateQuarterClockwise();
         assertEquals('H', p1.getOrientation());
 
         assertEquals('U', p2.getOrientation());
-        p2.rotateQuarterClockwise();
+        p2 = p2.rotateQuarterClockwise();
         assertEquals('R', p2.getOrientation());
-        p2.rotateQuarterClockwise();
+        p2 = p2.rotateQuarterClockwise();
         assertEquals('D', p2.getOrientation());
-        p2.rotateQuarterClockwise();
+        p2 = p2.rotateQuarterClockwise();
         assertEquals('L', p2.getOrientation());
-        p2.rotateQuarterClockwise();
+        p2 = p2.rotateQuarterClockwise();
         assertEquals('U', p2.getOrientation());
 
         assertThrows(IllegalArgumentException.class, () -> p3.rotateQuarterClockwise());

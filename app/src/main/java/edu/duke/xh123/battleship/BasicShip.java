@@ -144,6 +144,6 @@ public abstract class BasicShip<T> implements Ship<T> {
             newPieces.put(afterRotate, pair.getValue());
         }
         myPieces = newPieces;
-        myPlacement.rotateQuarterClockwise();
+        myPlacement = myPlacement.rotateQuarterClockwise();
     }
 }

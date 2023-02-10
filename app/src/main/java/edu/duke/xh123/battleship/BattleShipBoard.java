@@ -141,7 +141,7 @@ public class BattleShipBoard<T> implements Board<T> {
     }
 
     @Override
-    public String tryMoveShip(Ship<T> toMove, Placement destination) {
+    public void tryMoveShip(Ship<T> toMove, Placement destination) {
         Placement origin = toMove.getPlacement();
         toMove.moveTo(destination);
         myShips.remove(toMove);
@@ -151,8 +151,8 @@ public class BattleShipBoard<T> implements Board<T> {
         } else {
             toMove.moveTo(origin);
             myShips.add(toMove);
+            throw new IllegalArgumentException(msg);
         }
-        return msg;
     }
 
     @Override

@@ -67,10 +67,8 @@ public interface Board<T> {
      * 
      * @param toMove      is the selected ship.
      * @param destination is the destination placement.
-     * @return null if the ship be moved successfully, a string indicating what was
-     *         wrong if not.
      */
-    public String tryMoveShip(Ship<T> toMove, Placement destination);
+    public void tryMoveShip(Ship<T> toMove, Placement destination);
 
     /**
      * Use sonar to scan the diamond area around the center coordinate.

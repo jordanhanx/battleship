@@ -144,11 +144,15 @@ public class BattleShipBoardTest {
         Ship<Character> s2 = new V1ShipFactory().makeSubmarine(new Placement("C0H"));
         b.tryAddShip(s1);
         b.tryAddShip(s2);
-        assertEquals("That placement is invalid: the ship goes off the right of the board.",
-                b.tryMoveShip(s2, new Placement("C4H")));
-        assertEquals("That placement is invalid: the ship overlaps another ship.",
-                b.tryMoveShip(s2, new Placement("A1V")));
-        assertEquals(null, b.tryMoveShip(s2, new Placement("A4V")));
+        assertThrows(IllegalArgumentException.class, () -> b.tryMoveShip(s2, new Placement("C4H")));
+        assertSame(s2, b.whichShipIsAt(new Coordinate("C0")));
+        assertSame(s2, b.whichShipIsAt(new Coordinate("C1")));
+        assertThrows(IllegalArgumentException.class, () -> b.tryMoveShip(s2, new Placement("A1V")));
+        assertSame(s2, b.whichShipIsAt(new Coordinate("C0")));
+        assertSame(s2, b.whichShipIsAt(new Coordinate("C1")));
+        assertDoesNotThrow(() -> b.tryMoveShip(s2, new Placement("A4V")));
+        assertSame(s2, b.whichShipIsAt(new Coordinate("A4")));
+        assertSame(s2, b.whichShipIsAt(new Coordinate("B4")));
     }
 
     @Test

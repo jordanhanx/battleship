@@ -34,6 +34,24 @@ public class TextPlayerTest {
         };
     }
 
+    private TextPlayer createNoTokenTextPlayer(String name, int w, int h, String inputData, OutputStream bytes,
+            int moveToken, int sonarToken) {
+        BufferedReader input = new BufferedReader(new StringReader(inputData));
+        PrintStream output = new PrintStream(bytes, true);
+        Board<Character> board = new BattleShipBoard<>(w, h, 'X');
+        V1ShipFactory shipFactory = new V1ShipFactory();
+        return new TextPlayer(name, board, input, output, shipFactory) {
+            protected void setupTokens() {
+                moveShipToken = moveToken;
+                sonarScanToken = sonarToken;
+            }
+
+            protected void setupShipCreationList() {
+                shipsToPlace.addAll(Collections.nCopies(1, "Submarine"));
+            }
+        };
+    }
+
     @Test
     public void test_readPlacement() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -236,47 +254,181 @@ public class TextPlayerTest {
     }
 
     @Test
-    public void test_playOneTurn() throws IOException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        TextPlayer p1 = createPoorTextPlayer("Test1", 4, 3, "B1V\n??\nB1\nA1", bytes);
-        TextPlayer p2 = createPoorTextPlayer("Test2", 4, 3, "A0H", bytes);
-        p1.doPlacementPhase();
-        p2.doPlacementPhase();
-        bytes.reset();
-
-        String expect1 = "Player Test1's turn:\n" +
-                "     Your ocean               Player Test2's ocean\n" +
-                "  0|1|2|3                    0|1|2|3\n" +
-                "A  | | |  A                A  | | |  A\n" +
-                "B  |s| |  B                B  | | |  B\n" +
-                "C  |s| |  C                C  | | |  C\n" +
-                "  0|1|2|3                    0|1|2|3\n" +
-                "Player Test1 where do you want to fire at?\n" +
-                "That coordinate is invalid: it does not have the correct format.\n" +
-                "Player Test1 where do you want to fire at?\n" +
-                "You missed!\n";
-        p1.playOneTurn(p2.theBoard, p2.view, p2.name);
-        assertEquals(expect1, bytes.toString());
-
-        bytes.reset();
-        String expect2 = "Player Test1's turn:\n" +
-                "     Your ocean               Player Test2's ocean\n" +
-                "  0|1|2|3                    0|1|2|3\n" +
-                "A  | | |  A                A  | | |  A\n" +
-                "B  |s| |  B                B  |X| |  B\n" +
-                "C  |s| |  C                C  | | |  C\n" +
-                "  0|1|2|3                    0|1|2|3\n" +
-                "Player Test1 where do you want to fire at?\n" +
-                "You hit a Submarine!\n";
-        p1.playOneTurn(p2.theBoard, p2.view, p2.name);
-        assertEquals(expect2, bytes.toString());
-    }
-
-    @Test
     public void test_announceVictory() {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         TextPlayer p1 = createPoorTextPlayer("Test1", 4, 3, "A0H", bytes);
         p1.announceVictory();
         assertEquals("Player Test1 is the winner!\n", bytes.toString());
+    }
+
+    @Test
+    public void test_openFire() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        TextPlayer p1 = createPoorTextPlayer("Test1", 4, 3, "B1V\nB1\nA1", bytes);
+        TextPlayer p2 = createPoorTextPlayer("Test2", 4, 3, "A0H\nB1", bytes);
+        p1.doPlacementPhase();
+        p2.doPlacementPhase();
+        bytes.reset();
+
+        p1.openFire(p2.theBoard);
+        p1.openFire(p2.theBoard);
+        p2.openFire(p1.theBoard);
+
+        StringBuilder expect = new StringBuilder();
+        expect.append("Player Test1 where do you want to fire at?\n");
+        expect.append("You missed!\n");
+        expect.append("Player Test1 where do you want to fire at?\n");
+        expect.append("You hit a Submarine!\n");
+        expect.append("Player Test2 where do you want to fire at?\n");
+        expect.append("You hit a Submarine!\n");
+
+        assertEquals(expect.toString(), bytes.toString());
+    }
+
+    @Test
+    public void test_moveShip() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        TextPlayer p1 = createPoorTextPlayer("Test1", 4, 3, "B1V\nD1\nC1\nC2H", bytes);
+        p1.doPlacementPhase();
+        bytes.reset();
+
+        assertEquals('s', p1.theBoard.whatIsAtForSelf(new Coordinate("B1")));
+        assertEquals('s', p1.theBoard.whatIsAtForSelf(new Coordinate("C1")));
+
+        assertThrows(IllegalArgumentException.class, () -> p1.moveShip());
+        assertDoesNotThrow(() -> p1.moveShip());
+
+        StringBuilder expect = new StringBuilder("");
+        expect.append("Player Test1 which ship do you want to move? (input one Coordinate occupied by the ship)\n");
+        expect.append("Player Test1 which ship do you want to move? (input one Coordinate occupied by the ship)\n");
+        expect.append("Player Test1 where do you want to place the Submarine?\n");
+        assertEquals(expect.toString(), bytes.toString());
+        assertEquals('s', p1.theBoard.whatIsAtForSelf(new Coordinate("C2")));
+        assertEquals('s', p1.theBoard.whatIsAtForSelf(new Coordinate("C3")));
+    }
+
+    @Test
+    public void test_scanSonar() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        TextPlayer p1 = createPoorTextPlayer("Test1", 4, 4, "B1V\nA0\nC3\nE4", bytes);
+        TextPlayer p2 = createPoorTextPlayer("Test2", 4, 4, "A0H\n", bytes);
+        p1.doPlacementPhase();
+        p2.doPlacementPhase();
+        bytes.reset();
+
+        p1.scanSonar(p2.theBoard);
+        p1.scanSonar(p2.theBoard);
+        p1.scanSonar(p2.theBoard);
+        StringBuilder expect = new StringBuilder("");
+        expect.append("Player Test1 where do you want to scan with sonar?\n");
+        expect.append("Submarines occupy 2 squares\n");
+        expect.append("Player Test1 where do you want to scan with sonar?\n");
+        expect.append("Submarines occupy 0 squares\n");
+        expect.append("Player Test1 where do you want to scan with sonar?\n");
+        expect.append("Submarines occupy 0 squares\n");
+        assertEquals(expect.toString(), bytes.toString());
+    }
+
+    @Test
+    public void test_printAvailableActions() {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        TextPlayer p1 = createNoTokenTextPlayer("Test1", 4, 4, "", bytes, 1, 1);
+        TextPlayer p2 = createNoTokenTextPlayer("Test1", 4, 4, "", bytes, 1, 0);
+        TextPlayer p3 = createNoTokenTextPlayer("Test1", 4, 4, "", bytes, 0, 1);
+        TextPlayer p4 = createNoTokenTextPlayer("Test1", 4, 4, "", bytes, 0, 0);
+        bytes.reset();
+
+        p1.printAvailableActions();
+        StringBuilder expect1 = new StringBuilder("");
+        expect1.append("Possible actions for Player Test1:\n\n");
+        expect1.append(" F Fire at a square\n");
+        expect1.append(" M Move a ship to another square (1 remaining)\n");
+        expect1.append(" S Sonar scan (1 remaining)\n");
+        expect1.append("\nPlayer Test1, what would you like to do?\n");
+        assertEquals(expect1.toString(), bytes.toString());
+        bytes.reset();
+        p2.printAvailableActions();
+        StringBuilder expect2 = new StringBuilder("");
+        expect2.append("Possible actions for Player Test1:\n\n");
+        expect2.append(" F Fire at a square\n");
+        expect2.append(" M Move a ship to another square (1 remaining)\n");
+        expect2.append("\nPlayer Test1, what would you like to do?\n");
+        assertEquals(expect2.toString(), bytes.toString());
+        bytes.reset();
+        p3.printAvailableActions();
+        StringBuilder expect3 = new StringBuilder("");
+        expect3.append("Possible actions for Player Test1:\n\n");
+        expect3.append(" F Fire at a square\n");
+        expect3.append(" S Sonar scan (1 remaining)\n");
+        expect3.append("\nPlayer Test1, what would you like to do?\n");
+        assertEquals(expect3.toString(), bytes.toString());
+        bytes.reset();
+        p4.printAvailableActions();
+        assertEquals("", bytes.toString());
+    }
+
+    @Test
+    public void test_takeAction() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        TextPlayer p1 = createNoTokenTextPlayer("Test1", 4, 4, "B0H\n?\nf\nA0\nm\nB1\nC1V\nm\nS\nA0\nA1", bytes, 1, 1);
+        TextPlayer p2 = createNoTokenTextPlayer("Test2", 4, 3, "A0H\ns\n", bytes, 1, 0);
+        p1.doPlacementPhase();
+        p2.doPlacementPhase();
+        bytes.reset();
+
+        assertThrows(IllegalArgumentException.class, () -> p1.takeAction(p2.theBoard));
+        assertDoesNotThrow(() -> p1.takeAction(p2.theBoard));
+        assertDoesNotThrow(() -> p1.takeAction(p2.theBoard));
+        assertThrows(IllegalArgumentException.class, () -> p1.takeAction(p2.theBoard));
+        assertDoesNotThrow(() -> p1.takeAction(p2.theBoard));
+        assertDoesNotThrow(() -> p1.takeAction(p2.theBoard));
+        assertThrows(IllegalArgumentException.class, () -> p2.takeAction(p1.theBoard));
+
+        StringBuilder expect = new StringBuilder("");
+        expect.append("Player Test1 where do you want to fire at?\n");
+        expect.append("You hit a Submarine!\n");
+        expect.append("Player Test1 which ship do you want to move? (input one Coordinate occupied by the ship)\n");
+        expect.append("Player Test1 where do you want to place the Submarine?\n");
+        expect.append("Player Test1 where do you want to scan with sonar?\n");
+        expect.append("Submarines occupy 2 squares\n");
+        expect.append("Player Test1 where do you want to fire at?\n");
+        expect.append("You hit a Submarine!\n");
+        assertEquals(expect.toString(), bytes.toString());
+    }
+
+    @Test
+    public void test_playOneTurn() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        TextPlayer p1 = createPoorTextPlayer("Test1", 4, 4, "B0H\nm\na0\nf\nA0", bytes);
+        TextPlayer p2 = createPoorTextPlayer("Test2", 4, 4, "A0H\n", bytes);
+        p1.doPlacementPhase();
+        p2.doPlacementPhase();
+        bytes.reset();
+
+        p1.playOneTurn(p2.theBoard, p2.view, p2.name);
+        StringBuilder expect = new StringBuilder("");
+        expect.append("Player Test1's turn:\n");
+        expect.append("     Your ocean               Player Test2's ocean\n");
+        expect.append("  0|1|2|3                    0|1|2|3\n");
+        expect.append("A  | | |  A                A  | | |  A\n");
+        expect.append("B s|s| |  B                B  | | |  B\n");
+        expect.append("C  | | |  C                C  | | |  C\n");
+        expect.append("D  | | |  D                D  | | |  D\n");
+        expect.append("  0|1|2|3                    0|1|2|3\n");
+        expect.append("Possible actions for Player Test1:\n\n");
+        expect.append(" F Fire at a square\n");
+        expect.append(" M Move a ship to another square (3 remaining)\n");
+        expect.append(" S Sonar scan (3 remaining)\n");
+        expect.append("\nPlayer Test1, what would you like to do?\n");
+        expect.append("Player Test1 which ship do you want to move? (input one Coordinate occupied by the ship)\n");
+        expect.append("Oops, there is no ship at (0, 0)\n");
+        expect.append("Possible actions for Player Test1:\n\n");
+        expect.append(" F Fire at a square\n");
+        expect.append(" M Move a ship to another square (3 remaining)\n");
+        expect.append(" S Sonar scan (3 remaining)\n");
+        expect.append("\nPlayer Test1, what would you like to do?\n");
+        expect.append("Player Test1 where do you want to fire at?\n");
+        expect.append("You hit a Submarine!\n");
+        assertEquals(expect.toString(), bytes.toString());
     }
 }
