@@ -11,12 +11,30 @@ import org.junit.jupiter.api.parallel.Resources;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.StringReader;
 
 class AppTest {
+
+    @Test
+    public void test_ifPlayAgainstComputer() throws IOException {
+        BufferedReader input = new BufferedReader(new StringReader("??\nY\nn"));
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintStream output = new PrintStream(bytes, true);
+
+        StringBuilder expect = new StringBuilder("");
+        expect.append("Is player Test a computer player? (y/N)\n");
+        expect.append("Invalid choice!\n");
+        expect.append("Is player Test a computer player? (y/N)\n");
+        expect.append("Is player Test a computer player? (y/N)\n");
+        assertTrue(App.isComputerPlayer("Test", input, output));
+        assertFalse(App.isComputerPlayer("Test", input, output));
+        assertEquals(expect.toString(), bytes.toString());
+    }
 
     // @Disabled
     @Test

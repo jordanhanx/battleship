@@ -17,11 +17,11 @@ public class TextPlayer {
     final String name;
     final Board<Character> theBoard;
     final BoardTextView view;
-    private final BufferedReader inputReader;
-    private final PrintStream out;
-    private final AbstractShipFactory<Character> shipFactory;
+    protected final BufferedReader inputReader;
+    protected final PrintStream out;
+    protected final AbstractShipFactory<Character> shipFactory;
     protected final ArrayList<String> shipsToPlace;
-    private final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
+    protected final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
     protected int moveShipToken;
     protected int sonarScanToken;
 

@@ -21,14 +21,45 @@ public class App {
      * @param inputSource is where to read input String.
      * @param out         is where to print Board's text view.
      */
-    public App(int width, int height, Reader inputSource, PrintStream out) {
+    public App(int width, int height, Reader inputSource, PrintStream out) throws IOException {
         Board<Character> b1 = new BattleShipBoard<>(width, height, 'X');
         Board<Character> b2 = new BattleShipBoard<>(width, height, 'X');
         BufferedReader input = new BufferedReader(inputSource);
         // V1ShipFactory factory = new V1ShipFactory();
         V2ShipFactory factory = new V2ShipFactory();
-        this.player1 = new TextPlayer("A", b1, input, out, factory);
-        this.player2 = new TextPlayer("B", b2, input, out, factory);
+
+        if (isComputerPlayer("A", input, out)) {
+            this.player1 = new ComputerTextPlayer("A (Computer)", b1, input, out, factory);
+        } else {
+            this.player1 = new TextPlayer("A", b1, input, out, factory);
+        }
+        if (isComputerPlayer("B", input, out)) {
+            this.player2 = new ComputerTextPlayer("B (Computer)", b2, input, out, factory);
+        } else {
+            this.player2 = new TextPlayer("B", b2, input, out, factory);
+        }
+    }
+
+    /**
+     * Read the setting for whether the play is a computer player.
+     * 
+     * @param name        is the player's name.
+     * @param inputSource is where to read input String.
+     * @param out         is where to print.
+     * @return whether the play is a computer player.
+     * @throws IOException If We Have Io Errors When Reading Or Printing.
+     */
+    static boolean isComputerPlayer(String name, BufferedReader inputReader, PrintStream out) throws IOException {
+        while (true) {
+            out.println("Is player " + name + " a computer player? (y/N)");
+            String s = inputReader.readLine();
+            if (s.equalsIgnoreCase("y")) {
+                return true;
+            } else if (s.equalsIgnoreCase("N")) {
+                return false;
+            }
+            out.println("Invalid choice!");
+        }
     }
 
     /**
