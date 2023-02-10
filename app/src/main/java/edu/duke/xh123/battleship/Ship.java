@@ -68,8 +68,20 @@ public interface Ship<T> {
      */
     public Iterable<Coordinate> getCoordinates();
 
-    // public Placement rotateQuarterClockwise();
+    /**
+     * Get ship's current placement.
+     * 
+     * @return the ship's current placement.
+     */
+    public Placement getPlacement();
 
-    // public Placement moveTo(Placement destination);
+    /**
+     * Rotate the ship 90 degrees clockwisely in place.
+     */
+    public void rotateQuarterClockwise();
 
+    /**
+     * Move and rotate the ship to the destination.
+     */
+    public void moveTo(Placement destination);
 }

@@ -5,7 +5,7 @@ package edu.duke.xh123.battleship;
  */
 public class Placement {
     private final Coordinate cood;
-    private final char orient;
+    private char orient;
 
     /**
      * Constructs a Placement with a Coordinate and a char
@@ -40,6 +40,47 @@ public class Placement {
 
     public char getOrientation() {
         return orient;
+    }
+
+    /**
+     * Rotates placement clockwise and update orientation.
+     * version 1 cycle: 'H'->'V'->'_'->'_'->'H'->...
+     * version 2 cycle: 'U'->'R'->'D'->'L'->'U'->...
+     */
+    public void rotateQuarterClockwise() {
+        if (orient == 'U') {
+            orient = 'R';
+            return;
+        }
+        if (orient == 'R') {
+            orient = 'D';
+            return;
+        }
+        if (orient == 'D') {
+            orient = 'L';
+            return;
+        }
+        if (orient == 'L') {
+            orient = 'U';
+            return;
+        }
+        if (orient == 'H') {
+            orient = 'V';
+            return;
+        }
+        if (orient == 'V') {
+            orient = '_';
+            return;
+        }
+        if (orient == '_') {
+            orient = '-';
+            return;
+        }
+        if (orient == '-') {
+            orient = 'H';
+            return;
+        }
+        throw new IllegalArgumentException("Non-rotatable orientation: " + orient);
     }
 
     @Override

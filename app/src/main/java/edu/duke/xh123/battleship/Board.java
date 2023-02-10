@@ -1,5 +1,7 @@
 package edu.duke.xh123.battleship;
 
+import java.util.Map;
+
 /**
  * This interface represents any type of Board in our Battleship game. It is
  * generic in typename T, which is the type of information the view needs to
@@ -52,4 +54,29 @@ public interface Board<T> {
      * @return true if all sunk.
      */
     public boolean shipsAreAllSunk();
+
+    /**
+     * Get a ship that occupies the given coordinate.
+     * 
+     * @param c is the coordinate occupied by the return ship.
+     */
+    public Ship<T> whichShipIsAt(Coordinate c);
+
+    /**
+     * Try move the selected ship to the destination placement.
+     * 
+     * @param toMove      is the selected ship.
+     * @param destination is the destination placement.
+     * @return null if the ship be moved successfully, a string indicating what was
+     *         wrong if not.
+     */
+    public String tryMoveShip(Ship<T> toMove, Placement destination);
+
+    /**
+     * Use sonar to scan the diamond area around the center coordinate.
+     * 
+     * @param center is the scan center coordinate.
+     * @return a Map, Ship's name is key and counts is value.
+     */
+    public Map<String, Integer> sonarScanAt(Coordinate center);
 }

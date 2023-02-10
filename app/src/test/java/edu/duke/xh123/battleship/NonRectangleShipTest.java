@@ -133,4 +133,42 @@ public class NonRectangleShipTest {
         }
         assertEquals(cmp_set.size(), cnt);
     }
+
+    @Test
+    public void test_moveTo() {
+        HashSet<Coordinate> r = new HashSet<>();
+        r.add(new Coordinate(0, 0));
+        r.add(new Coordinate(2, 1));
+        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Placement("B2u"), 2, 3, r, 'b',
+                '*');
+        ship.recordHitAt(new Coordinate(3, 2));
+        assertThrows(IllegalArgumentException.class, () -> ship.moveTo(new Placement("c0H")));
+        assertDoesNotThrow(() -> ship.moveTo(new Placement("c0r")));
+        assertEquals(new Placement("C0R"), ship.getPlacement());
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(2, 0), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(2, 1), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(3, 1), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(3, 2), true));
+
+        assertDoesNotThrow(() -> ship.moveTo(new Placement("c0d")));
+        assertEquals(new Placement("C0D"), ship.getPlacement());
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(2, 1), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(3, 0), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(3, 1), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(4, 0), true));
+
+        assertDoesNotThrow(() -> ship.moveTo(new Placement("c0L")));
+        assertEquals(new Placement("C0l"), ship.getPlacement());
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(2, 0), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(2, 1), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(3, 1), true));
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(3, 2), true));
+
+        assertDoesNotThrow(() -> ship.moveTo(new Placement("c0u")));
+        assertEquals(new Placement("C0U"), ship.getPlacement());
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(2, 1), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(3, 0), true));
+        assertEquals('b', ship.getDisplayInfoAt(new Coordinate(3, 1), true));
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(4, 0), true));
+    }
 }

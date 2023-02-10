@@ -69,4 +69,16 @@ public class RectangleShip<T> extends BasicShip<T> {
         this("testship", new Placement(upperLeft, 'H'), 1, 1, data, onHit);
     }
 
+    @Override
+    public void moveTo(Placement destination) {
+        if (destination.getOrientation() == 'H' || destination.getOrientation() == 'V') {
+            while (myPlacement.getOrientation() != destination.getOrientation()) {
+                rotateQuarterClockwise(); // rotate
+            }
+            myPlacement = destination; // move
+        } else {
+            throw new IllegalArgumentException(
+                    "Placement's orientation should be veritcal or horizontal, but " + destination.getOrientation());
+        }
+    }
 }

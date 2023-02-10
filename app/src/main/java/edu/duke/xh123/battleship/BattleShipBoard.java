@@ -1,7 +1,8 @@
 package edu.duke.xh123.battleship;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is an specific type of Board having several ships and const size in our
@@ -12,7 +13,7 @@ public class BattleShipBoard<T> implements Board<T> {
     private final int height;
     private final ArrayList<Ship<T>> myShips;
     private final PlacementRuleChecker<T> placementChecker;
-    private HashSet<Coordinate> enemyMisses;
+    private HashMap<Coordinate, T> enemyMarkers;
     final T missInfo;
 
     /**
@@ -35,9 +36,9 @@ public class BattleShipBoard<T> implements Board<T> {
         }
         this.width = w;
         this.height = h;
-        this.myShips = new ArrayList<Ship<T>>();
+        this.myShips = new ArrayList<>();
         this.placementChecker = checker;
-        this.enemyMisses = new HashSet<Coordinate>();
+        this.enemyMarkers = new HashMap<>();
         this.missInfo = missInfo;
     }
 
@@ -71,10 +72,8 @@ public class BattleShipBoard<T> implements Board<T> {
         String msg = placementChecker.checkPlacement(toAdd, this);
         if (msg == null) {
             myShips.add(toAdd);
-            return null;
-        } else {
-            return msg;
         }
+        return msg;
     }
 
     /**
@@ -86,15 +85,15 @@ public class BattleShipBoard<T> implements Board<T> {
      *         coordinate.
      */
     protected T whatIsAt(Coordinate where, boolean isSelf) {
-        for (Ship<T> s : myShips) {
-            if (s.occupiesCoordinates(where)) {
-                return s.getDisplayInfoAt(where, isSelf);
+        if (isSelf) {
+            for (Ship<T> s : myShips) {
+                if (s.occupiesCoordinates(where)) {
+                    return s.getDisplayInfoAt(where, isSelf);
+                }
             }
-        }
-        if (!isSelf && enemyMisses.contains(where)) {
-            return missInfo;
-        } else {
             return null;
+        } else {
+            return enemyMarkers.get(where);
         }
     }
 
@@ -113,10 +112,11 @@ public class BattleShipBoard<T> implements Board<T> {
         for (Ship<T> s : myShips) {
             if (s.occupiesCoordinates(c)) {
                 s.recordHitAt(c);
+                enemyMarkers.put(c, s.getDisplayInfoAt(c, false));
                 return s;
             }
         }
-        enemyMisses.add(c);
+        enemyMarkers.put(c, missInfo);
         return null;
     }
 
@@ -128,5 +128,49 @@ public class BattleShipBoard<T> implements Board<T> {
             }
         }
         return true;
+    }
+
+    @Override
+    public Ship<T> whichShipIsAt(Coordinate c) {
+        for (Ship<T> s : myShips) {
+            if (s.occupiesCoordinates(c) && !s.isSunk()) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String tryMoveShip(Ship<T> toMove, Placement destination) {
+        Placement origin = toMove.getPlacement();
+        toMove.moveTo(destination);
+        myShips.remove(toMove);
+        String msg = placementChecker.checkPlacement(toMove, this);
+        if (msg == null) {
+            myShips.add(toMove);
+        } else {
+            toMove.moveTo(origin);
+            myShips.add(toMove);
+        }
+        return msg;
+    }
+
+    @Override
+    public Map<String, Integer> sonarScanAt(Coordinate center) {
+        HashMap<String, Integer> scanResult = new HashMap<>();
+        for (Ship<T> ship : myShips) {
+            scanResult.putIfAbsent(ship.getName(), 0);
+        }
+        for (int row = center.getRow() - 3; row <= center.getRow() + 3; row++) {
+            for (int col = center.getColumn() - 3 + Math.abs(row - center.getRow()); col <= center.getColumn() + 3
+                    - Math.abs(row - center.getRow()); col++) {
+                Ship<T> s = whichShipIsAt(new Coordinate(row, col));
+                if (s != null) {
+                    int value = scanResult.get(s.getName());
+                    scanResult.put(s.getName(), value + 1);
+                }
+            }
+        }
+        return scanResult;
     }
 }

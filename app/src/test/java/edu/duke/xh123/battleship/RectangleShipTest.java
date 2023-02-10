@@ -98,4 +98,22 @@ public class RectangleShipTest {
         }
         assertEquals(cmp_set.size(), cnt);
     }
+
+    @Test
+    public void test_moveTo() {
+        RectangleShip<Character> ship = new RectangleShip<>("submarine", new Placement("B2V"), 1, 3, 's', '*');
+        ship.recordHitAt(new Coordinate(3, 2));
+        assertThrows(IllegalArgumentException.class, () -> ship.moveTo(new Placement("c3?")));
+        assertDoesNotThrow(() -> ship.moveTo(new Placement("c3h")));
+        assertEquals(new Placement("C3h"), ship.getPlacement());
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 3), true));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 4), true));
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(2, 5), true));
+
+        assertDoesNotThrow(() -> ship.moveTo(new Placement("c3v")));
+        assertEquals(new Placement("C3v"), ship.getPlacement());
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 3), true));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(3, 3), true));
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(4, 3), true));
+    }
 }

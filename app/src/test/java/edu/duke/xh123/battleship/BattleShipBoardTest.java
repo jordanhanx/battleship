@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 public class BattleShipBoardTest {
     @Test
     public void test_width_and_height() {
@@ -117,5 +119,58 @@ public class BattleShipBoardTest {
         assertFalse(b.shipsAreAllSunk());
         b.fireAt(new Coordinate(2, 1));
         assertTrue(b.shipsAreAllSunk());
+    }
+
+    @Test
+    public void test_whichShipIsAt() {
+        BattleShipBoard<Character> b = new BattleShipBoard<>(5, 5, 'X');
+        Ship<Character> s1 = new V1ShipFactory().makeSubmarine(new Placement("B1V"));
+        b.tryAddShip(s1);
+        assertSame(null, b.whichShipIsAt(new Coordinate("A1")));
+        assertSame(s1, b.whichShipIsAt(new Coordinate("B1")));
+        assertSame(s1, b.whichShipIsAt(new Coordinate("C1")));
+        assertSame(null, b.whichShipIsAt(new Coordinate("D1")));
+
+        b.fireAt(new Coordinate(1, 1));
+        b.fireAt(new Coordinate(2, 1));
+        assertSame(null, b.whichShipIsAt(new Coordinate("B1")));
+        assertSame(null, b.whichShipIsAt(new Coordinate("C1")));
+    }
+
+    @Test
+    public void test_tryMoveShip() {
+        BattleShipBoard<Character> b = new BattleShipBoard<>(5, 5, 'X');
+        Ship<Character> s1 = new V1ShipFactory().makeSubmarine(new Placement("A0H"));
+        Ship<Character> s2 = new V1ShipFactory().makeSubmarine(new Placement("C0H"));
+        b.tryAddShip(s1);
+        b.tryAddShip(s2);
+        assertEquals("That placement is invalid: the ship goes off the right of the board.",
+                b.tryMoveShip(s2, new Placement("C4H")));
+        assertEquals("That placement is invalid: the ship overlaps another ship.",
+                b.tryMoveShip(s2, new Placement("A1V")));
+        assertEquals(null, b.tryMoveShip(s2, new Placement("A4V")));
+    }
+
+    @Test
+    public void test_sonarScanAt() {
+        BattleShipBoard<Character> b = new BattleShipBoard<>(10, 10, 'X');
+        Ship<Character> s1 = new V2ShipFactory().makeSubmarine(new Placement("A0H"));
+        Ship<Character> s2 = new V2ShipFactory().makeDestroyer(new Placement("C3H"));
+        Ship<Character> s3 = new V2ShipFactory().makeBattleship(new Placement("E5U"));
+        Ship<Character> s4 = new V2ShipFactory().makeCarrier(new Placement("G5R"));
+        b.tryAddShip(s1);
+        b.tryAddShip(s2);
+        b.tryAddShip(s3);
+        b.tryAddShip(s4);
+        Map<String, Integer> scanResult1 = b.sonarScanAt(new Coordinate("A0"));
+        assertEquals(2, scanResult1.get("Submarine"));
+        assertEquals(0, scanResult1.get("Destroyer"));
+        assertEquals(0, scanResult1.get("Battleship"));
+        assertEquals(0, scanResult1.get("Carrier"));
+        Map<String, Integer> scanResult2 = b.sonarScanAt(new Coordinate("F5"));
+        assertEquals(0, scanResult2.get("Submarine"));
+        assertEquals(1, scanResult2.get("Destroyer"));
+        assertEquals(4, scanResult2.get("Battleship"));
+        assertEquals(4, scanResult2.get("Carrier"));
     }
 }

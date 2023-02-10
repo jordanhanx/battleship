@@ -66,4 +66,18 @@ public class NonRectangleShip<T> extends BasicShip<T> {
         this(name, placement, width, height, remove, new SimpleShipDisplayInfo<T>(data, onHit),
                 new SimpleShipDisplayInfo<T>(null, data));
     }
+
+    @Override
+    public void moveTo(Placement destination) {
+        if (destination.getOrientation() == 'U' || destination.getOrientation() == 'R'
+                || destination.getOrientation() == 'D' || destination.getOrientation() == 'L') {
+            while (myPlacement.getOrientation() != destination.getOrientation()) {
+                rotateQuarterClockwise(); // rotate
+            }
+            myPlacement = destination; // move
+        } else {
+            throw new IllegalArgumentException(
+                    "Placement's orientation should be Up, Down, Left or Right, but " + destination.getOrientation());
+        }
+    }
 }

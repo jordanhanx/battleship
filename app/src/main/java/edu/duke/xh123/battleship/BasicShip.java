@@ -2,6 +2,7 @@ package edu.duke.xh123.battleship;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * This is an basic type of Ship occupying in our Battleship Game.
@@ -41,7 +42,7 @@ public abstract class BasicShip<T> implements Ship<T> {
      * @throws IllegalArgumentException if the Coordinate is not in this ship.
      */
     protected void checkCoordinateInThisShip(Coordinate c) {
-        if (!myPieces.containsKey(c)) {
+        if (!myPieces.containsKey(convertToRelative(c))) {
             throw new IllegalArgumentException("Coordinate" + c.toString() + " is not in this ship");
         }
     }
@@ -80,19 +81,19 @@ public abstract class BasicShip<T> implements Ship<T> {
 
     @Override
     public void recordHitAt(Coordinate where) {
-        checkCoordinateInThisShip(convertToRelative(where));
+        checkCoordinateInThisShip(where);
         myPieces.put(convertToRelative(where), true);
     }
 
     @Override
     public boolean wasHitAt(Coordinate where) {
-        checkCoordinateInThisShip(convertToRelative(where));
+        checkCoordinateInThisShip(where);
         return myPieces.get(convertToRelative(where));
     }
 
     @Override
     public T getDisplayInfoAt(Coordinate where, boolean myShip) {
-        checkCoordinateInThisShip(convertToRelative(where));
+        checkCoordinateInThisShip(where);
         if (myShip) {
             return myDisplayInfo.getInfo(where, wasHitAt(where));
         } else {
@@ -114,13 +115,35 @@ public abstract class BasicShip<T> implements Ship<T> {
         return coordinateSet;
     }
 
-    // @Override
-    // public Placement rotateQuarterClockwise() {
-    // HashMap<Coordinate, Boolean> newPieces = new HashMap<>();
-    // for (Map.Entry<Coordinate, Boolean> pair : myPieces.entrySet()) {
-    // Coordinate afterRotate = new Coordinate(pair.getKey().getColumn() -
-    // myPlacement.getCoordinate().getColumn(),
-    // myPlacement.getCoordinate().getRow() - pair.getKey().getRow());
-    // }
-    // }
+    @Override
+    public Placement getPlacement() {
+        return myPlacement;
+    }
+
+    /**
+     * Get the current Height of the rectangle area which envelops the ship.
+     * 
+     * @return the height.
+     */
+    private int getHeight() {
+        int h = 0;
+        for (Map.Entry<Coordinate, Boolean> pair : myPieces.entrySet()) {
+            if (pair.getKey().getRow() > h) {
+                h = pair.getKey().getRow();
+            }
+        }
+        return h;
+    }
+
+    @Override
+    public void rotateQuarterClockwise() {
+        int height = getHeight();
+        HashMap<Coordinate, Boolean> newPieces = new HashMap<>();
+        for (Map.Entry<Coordinate, Boolean> pair : myPieces.entrySet()) {
+            Coordinate afterRotate = new Coordinate(pair.getKey().getColumn(), height - pair.getKey().getRow());
+            newPieces.put(afterRotate, pair.getValue());
+        }
+        myPieces = newPieces;
+        myPlacement.rotateQuarterClockwise();
+    }
 }
