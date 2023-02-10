@@ -10,23 +10,23 @@ public class NonRectangleShipTest {
     @Test
     public void test_makeCoords() {
         HashSet<Coordinate> r = new HashSet<>();
-        r.add(new Coordinate(1, 2));
-        r.add(new Coordinate(3, 3));
-        HashSet<Coordinate> s1 = NonRectangleShip.makeCoords(new Coordinate(1, 2), 2, 3, r);
+        r.add(new Coordinate(0, 0));
+        r.add(new Coordinate(2, 1));
+        HashSet<Coordinate> s1 = NonRectangleShip.makeCoords(2, 3, r);
         assertFalse(s1.isEmpty());
-        s1.remove(new Coordinate(2, 2));
-        s1.remove(new Coordinate(3, 2));
-        s1.remove(new Coordinate(1, 3));
-        s1.remove(new Coordinate(2, 3));
+        s1.remove(new Coordinate(0, 1));
+        s1.remove(new Coordinate(1, 0));
+        s1.remove(new Coordinate(1, 1));
+        s1.remove(new Coordinate(2, 0));
         assertTrue(s1.isEmpty());
     }
 
     @Test
     public void test_constructor() {
         HashSet<Coordinate> r = new HashSet<>();
-        r.add(new Coordinate(1, 2));
-        r.add(new Coordinate(3, 3));
-        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Coordinate(1, 2), 2, 3, r, 'b',
+        r.add(new Coordinate(0, 0));
+        r.add(new Coordinate(2, 1));
+        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Placement("B2?"), 2, 3, r, 'b',
                 '*');
         assertFalse(ship.occupiesCoordinates(new Coordinate(1, 2)));
         assertTrue(ship.occupiesCoordinates(new Coordinate(2, 2)));
@@ -41,9 +41,9 @@ public class NonRectangleShipTest {
     @Test
     public void test_recordHitAt_and_wasHitAt() {
         HashSet<Coordinate> r = new HashSet<>();
-        r.add(new Coordinate(1, 2));
-        r.add(new Coordinate(3, 3));
-        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Coordinate(1, 2), 2, 3, r, 'b',
+        r.add(new Coordinate(0, 0));
+        r.add(new Coordinate(2, 1));
+        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Placement("B2?"), 2, 3, r, 'b',
                 '*');
 
         assertThrows(IllegalArgumentException.class, () -> ship.recordHitAt(new Coordinate(1, 2)));
@@ -62,9 +62,9 @@ public class NonRectangleShipTest {
     @Test
     public void test_isSunk() {
         HashSet<Coordinate> r = new HashSet<>();
-        r.add(new Coordinate(1, 2));
-        r.add(new Coordinate(3, 3));
-        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Coordinate(1, 2), 2, 3, r, 'b',
+        r.add(new Coordinate(0, 0));
+        r.add(new Coordinate(2, 1));
+        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Placement("B2?"), 2, 3, r, 'b',
                 '*');
 
         assertFalse(ship.isSunk());
@@ -81,9 +81,9 @@ public class NonRectangleShipTest {
     @Test
     public void test_getDisplayInfoAt() {
         HashSet<Coordinate> r = new HashSet<>();
-        r.add(new Coordinate(1, 2));
-        r.add(new Coordinate(3, 3));
-        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Coordinate(1, 2), 2, 3, r, 'b',
+        r.add(new Coordinate(0, 0));
+        r.add(new Coordinate(2, 1));
+        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Placement("B2?"), 2, 3, r, 'b',
                 '*');
 
         assertDoesNotThrow(() -> ship.recordHitAt(new Coordinate(1, 3)));
@@ -103,9 +103,9 @@ public class NonRectangleShipTest {
     @Test
     public void test_getName() {
         HashSet<Coordinate> r = new HashSet<>();
-        r.add(new Coordinate(1, 2));
-        r.add(new Coordinate(3, 3));
-        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Coordinate(1, 2), 2, 3, r, 'b',
+        r.add(new Coordinate(0, 0));
+        r.add(new Coordinate(2, 1));
+        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Placement("B2?"), 2, 3, r, 'b',
                 '*');
 
         assertEquals("Battleship", ship.getName());
@@ -120,9 +120,9 @@ public class NonRectangleShipTest {
         cmp_set.add(new Coordinate(3, 2));
 
         HashSet<Coordinate> r = new HashSet<>();
-        r.add(new Coordinate(1, 2));
-        r.add(new Coordinate(3, 3));
-        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Coordinate(1, 2), 2, 3, r, 'b',
+        r.add(new Coordinate(0, 0));
+        r.add(new Coordinate(2, 1));
+        NonRectangleShip<Character> ship = new NonRectangleShip<>("Battleship", new Placement("B2?"), 2, 3, r, 'b',
                 '*');
 
         Iterable<Coordinate> s1 = ship.getCoordinates();

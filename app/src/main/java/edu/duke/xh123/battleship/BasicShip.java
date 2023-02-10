@@ -1,32 +1,37 @@
 package edu.duke.xh123.battleship;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This is an basic type of Ship occupying in our Battleship Game.
  */
 public abstract class BasicShip<T> implements Ship<T> {
+    protected final String name;
+    protected Placement myPlacement;
     protected HashMap<Coordinate, Boolean> myPieces;
     protected ShipDisplayInfo<T> myDisplayInfo;
     protected ShipDisplayInfo<T> enemyDisplayInfo;
-    protected final String name;
 
     /**
      * Constructs a BasicShip with some Iterable Coordinates
      * 
-     * @param where            is some Iterable Coordinates occupied by the ship .
-     * @param myDisplayInfo    is the ship's display information for self.
-     * @param enemyDisplayInfo is the ship's display information for enemy.
+     * @param name                is the ship's name.
+     * @param myPlacement         is the ship's placement.
+     * @param relativeCoordinates is some Iterable Coordinates occupied by the ship
+     * @param myDisplayInfo       is the ship's display information for self.
+     * @param enemyDisplayInfo    is the ship's display information for enemy.
      */
-    public BasicShip(String name, Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo,
-            ShipDisplayInfo<T> enemyDisplayInfo) {
+    public BasicShip(String name, Placement myPlacement, Iterable<Coordinate> relativeCoordinates,
+            ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
+        this.name = name;
+        this.myPlacement = myPlacement;
         this.myPieces = new HashMap<>();
-        for (Coordinate c : where) {
+        for (Coordinate c : relativeCoordinates) {
             this.myPieces.put(c, false);
         }
         this.myDisplayInfo = myDisplayInfo;
         this.enemyDisplayInfo = enemyDisplayInfo;
-        this.name = name;
     }
 
     /**
@@ -41,9 +46,31 @@ public abstract class BasicShip<T> implements Ship<T> {
         }
     }
 
+    /**
+     * Converts absolute coordinate to relative coordinate.
+     * 
+     * @param absolute is absolute coordinate.
+     * @return relative coordinate
+     */
+    private Coordinate convertToRelative(Coordinate absolute) {
+        return new Coordinate(absolute.getRow() - myPlacement.getCoordinate().getRow(),
+                absolute.getColumn() - myPlacement.getCoordinate().getColumn());
+    }
+
+    /**
+     * Converts relative coordinate to absolute coordinate.
+     * 
+     * @param absolute is relative coordinate.
+     * @return absolute coordinate
+     */
+    private Coordinate convertToAbsolute(Coordinate relative) {
+        return new Coordinate(relative.getRow() + myPlacement.getCoordinate().getRow(),
+                relative.getColumn() + myPlacement.getCoordinate().getColumn());
+    }
+
     @Override
     public boolean occupiesCoordinates(Coordinate where) {
-        return myPieces.containsKey(where);
+        return myPieces.containsKey(convertToRelative(where));
     }
 
     @Override
@@ -53,19 +80,19 @@ public abstract class BasicShip<T> implements Ship<T> {
 
     @Override
     public void recordHitAt(Coordinate where) {
-        checkCoordinateInThisShip(where);
-        myPieces.put(where, true);
+        checkCoordinateInThisShip(convertToRelative(where));
+        myPieces.put(convertToRelative(where), true);
     }
 
     @Override
     public boolean wasHitAt(Coordinate where) {
-        checkCoordinateInThisShip(where);
-        return myPieces.get(where);
+        checkCoordinateInThisShip(convertToRelative(where));
+        return myPieces.get(convertToRelative(where));
     }
 
     @Override
     public T getDisplayInfoAt(Coordinate where, boolean myShip) {
-        checkCoordinateInThisShip(where);
+        checkCoordinateInThisShip(convertToRelative(where));
         if (myShip) {
             return myDisplayInfo.getInfo(where, wasHitAt(where));
         } else {
@@ -80,7 +107,20 @@ public abstract class BasicShip<T> implements Ship<T> {
 
     @Override
     public Iterable<Coordinate> getCoordinates() {
-        return myPieces.keySet();
+        HashSet<Coordinate> coordinateSet = new HashSet<>();
+        for (Coordinate relative : myPieces.keySet()) {
+            coordinateSet.add(convertToAbsolute(relative));
+        }
+        return coordinateSet;
     }
 
+    // @Override
+    // public Placement rotateQuarterClockwise() {
+    // HashMap<Coordinate, Boolean> newPieces = new HashMap<>();
+    // for (Map.Entry<Coordinate, Boolean> pair : myPieces.entrySet()) {
+    // Coordinate afterRotate = new Coordinate(pair.getKey().getColumn() -
+    // myPlacement.getCoordinate().getColumn(),
+    // myPlacement.getCoordinate().getRow() - pair.getKey().getRow());
+    // }
+    // }
 }

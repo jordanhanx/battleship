@@ -11,16 +11,15 @@ public class RectangleShip<T> extends BasicShip<T> {
      * This static method should generate the set of coordinates for a rectangle
      * starting at upperLeft whose width and height are as specified.
      * 
-     * @param upperLeft is the coordinate of rectangle's upper left corner.
-     * @param width     is the rectangle's width.
-     * @param height    is the rectangle's height.
+     * @param width  is the rectangle's width.
+     * @param height is the rectangle's height.
      * @return a set of coordinates for a rectangle.
      */
-    static HashSet<Coordinate> makeCoords(Coordinate upperLeft, int width, int height) {
+    static HashSet<Coordinate> makeCoords(int width, int height) {
         HashSet<Coordinate> cood_set = new HashSet<>();
         for (int row = 0; row < height; ++row) {
             for (int col = 0; col < width; ++col) {
-                cood_set.add(new Coordinate(upperLeft.getRow() + row, upperLeft.getColumn() + col));
+                cood_set.add(new Coordinate(row, col));
             }
         }
         return cood_set;
@@ -31,15 +30,15 @@ public class RectangleShip<T> extends BasicShip<T> {
      * height.
      * 
      * @param name             is the name of this ship.
-     * @param upperLeft        is the coordinate of rectangle's upper left corner.
+     * @param placement        is the placement of the ship.
      * @param width            is the rectangle's width.
      * @param height           is the rectangle's height.
      * @param myDisplayInfo    is the ship's self display information.
      * @param enemyDisplayInfo is the ship's display information for enemy.
      */
-    public RectangleShip(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo,
+    public RectangleShip(String name, Placement placement, int width, int height, ShipDisplayInfo<T> myDisplayInfo,
             ShipDisplayInfo<T> enemyDisplayInfo) {
-        super(name, makeCoords(upperLeft, width, height), myDisplayInfo, enemyDisplayInfo);
+        super(name, placement, makeCoords(width, height), myDisplayInfo, enemyDisplayInfo);
     }
 
     /**
@@ -47,14 +46,14 @@ public class RectangleShip<T> extends BasicShip<T> {
      * height.
      * 
      * @param name      is the name of this ship.
-     * @param upperLeft is the coordinate of rectangle's upper left corner.
+     * @param placement is the placement of the ship.
      * @param width     is the rectangle's width.
      * @param height    is the rectangle's height.
      * @param myData    is the display info of the ship's unhit part.
      * @param onHit     is the display info of the ship's hit part.
      */
-    public RectangleShip(String name, Coordinate upperLeft, int width, int height, T data, T onHit) {
-        this(name, upperLeft, width, height, new SimpleShipDisplayInfo<T>(data, onHit),
+    public RectangleShip(String name, Placement placement, int width, int height, T data, T onHit) {
+        this(name, placement, width, height, new SimpleShipDisplayInfo<T>(data, onHit),
                 new SimpleShipDisplayInfo<T>(null, data));
     }
 
@@ -67,7 +66,7 @@ public class RectangleShip<T> extends BasicShip<T> {
      * @param onHit     is the display info of the ship's hit part.
      */
     public RectangleShip(Coordinate upperLeft, T data, T onHit) {
-        this("testship", upperLeft, 1, 1, data, onHit);
+        this("testship", new Placement(upperLeft, 'H'), 1, 1, data, onHit);
     }
 
 }

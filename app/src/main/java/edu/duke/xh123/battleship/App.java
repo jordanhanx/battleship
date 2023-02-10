@@ -24,11 +24,11 @@ public class App {
     public App(int width, int height, Reader inputSource, PrintStream out) {
         Board<Character> b1 = new BattleShipBoard<>(width, height, 'X');
         Board<Character> b2 = new BattleShipBoard<>(width, height, 'X');
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader input = new BufferedReader(inputSource);
         // V1ShipFactory factory = new V1ShipFactory();
         V2ShipFactory factory = new V2ShipFactory();
-        this.player1 = new TextPlayer("A", b1, input, System.out, factory);
-        this.player2 = new TextPlayer("B", b2, input, System.out, factory);
+        this.player1 = new TextPlayer("A", b1, input, out, factory);
+        this.player2 = new TextPlayer("B", b2, input, out, factory);
     }
 
     /**

@@ -68,4 +68,8 @@ public interface Ship<T> {
      */
     public Iterable<Coordinate> getCoordinates();
 
+    // public Placement rotateQuarterClockwise();
+
+    // public Placement moveTo(Placement destination);
+
 }
