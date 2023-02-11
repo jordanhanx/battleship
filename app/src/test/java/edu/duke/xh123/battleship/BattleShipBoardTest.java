@@ -100,6 +100,7 @@ public class BattleShipBoardTest {
             for (int col = 0; col < b.getWidth(); ++col) {
                 if ((row == 1 || row == 2) && col == 1) {
                     assertSame(s1, b.fireAt(new Coordinate(row, col)));
+                    assertSame(null, b.fireAt(new Coordinate(row, col)));
                 } else {
                     assertSame(null, b.fireAt(new Coordinate(row, col)));
                 }

@@ -111,9 +111,13 @@ public class BattleShipBoard<T> implements Board<T> {
     public Ship<T> fireAt(Coordinate c) {
         for (Ship<T> s : myShips) {
             if (s.occupiesCoordinates(c)) {
-                s.recordHitAt(c);
-                enemyMarkers.put(c, s.getDisplayInfoAt(c, false));
-                return s;
+                if (!s.wasHitAt(c)) {
+                    s.recordHitAt(c);
+                    enemyMarkers.put(c, s.getDisplayInfoAt(c, false));
+                    return s;
+                } else {
+                    return null;
+                }
             }
         }
         enemyMarkers.put(c, missInfo);

@@ -44,25 +44,33 @@ class AppTest {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bytes, true);
 
-        InputStream input = getClass().getClassLoader().getResourceAsStream("input.txt");
-        assertNotNull(input);
+        String[] inputTxts = { "input_p1_p2.txt", "input_p1_c.txt", "input_c_p2.txt", "input_c_c.txt" };
+        String[] outputTxts = { "output_p1_p2.txt", "output_p1_c.txt", "output_c_p2.txt", "output_c_c.txt" };
 
-        InputStream expectedStream = getClass().getClassLoader().getResourceAsStream("output.txt");
-        assertNotNull(expectedStream);
+        for (int i = 0; i < inputTxts.length; ++i) {
 
-        InputStream oldIn = System.in;
-        PrintStream oldOut = System.out;
-        try {
-            System.setIn(input);
-            System.setOut(out);
-            App.main(new String[0]);
-        } finally {
-            System.setIn(oldIn);
-            System.setOut(oldOut);
+            InputStream input = getClass().getClassLoader().getResourceAsStream(inputTxts[i]);
+            assertNotNull(input);
+
+            InputStream expectedStream = getClass().getClassLoader().getResourceAsStream(outputTxts[i]);
+            assertNotNull(expectedStream);
+
+            InputStream oldIn = System.in;
+            PrintStream oldOut = System.out;
+            try {
+                System.setIn(input);
+                System.setOut(out);
+                App.main(new String[0]);
+            } finally {
+                System.setIn(oldIn);
+                System.setOut(oldOut);
+            }
+
+            String expected = new String(expectedStream.readAllBytes());
+            String actual = bytes.toString();
+            assertEquals(expected, actual);
+
+            bytes.reset();
         }
-
-        String expected = new String(expectedStream.readAllBytes());
-        String actual = bytes.toString();
-        assertEquals(expected, actual);
     }
 }
